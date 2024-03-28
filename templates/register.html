@@ -7,10 +7,10 @@ Registration
 {% block content %}
 <div class="container">
     <h1>Register</h1>
-    <form action="" class="form">
+    <form action="" class="form" method="post">
         <div class="form-group">
             <label for="name" class="form-label">Name</label>
-            <input type="text" name="username" required class="form-control">
+            <input type="text" name="name" required class="form-control">
         </div>
         <div class="form-group">
             <label for="username" class="form-label">Username</label>
@@ -22,7 +22,7 @@ Registration
         </div>
         <div class="form-group">
             <label for="confirm_password">Confirm Password</label>
-            <input type="password" name="confirm_password" required class="form-control">
+            <input type="text" name="confirm_password" required class="form-control">
         </div>
         <div class="form-group">
             <button type="submit" value="Register" class="btn btn-primary">Register</button>
