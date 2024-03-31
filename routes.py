@@ -1,11 +1,38 @@
-from flask import flash, redirect, render_template, request, url_for, redirect, flash, session
+from crypt import methods
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+    redirect,
+    flash,
+    session,
+)
+
 from app import app
 from models import db, User
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+
+
+# decorator for auth required
+def auth_required(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        if "user_id" in session:
+            return func(*args, **kwargs)
+        else:
+            flash("Please login to continue")
+            return redirect(url_for("login"))
+
+    return inner
 
 
 @app.route("/")
+@auth_required
 def index():
+    # user_id in session
     return render_template("index.html")
 
 
@@ -34,6 +61,10 @@ def login_post():
         flash("Incorrect password")
         return redirect(url_for("login"))
 
+    session["user_id"] = (
+        user.id
+    )  # user_id is a varible and the key of the dictionary session
+    flash("Login successful")
     return redirect(url_for("index"))
 
 
@@ -69,4 +100,49 @@ def register_post():
     new_user = User(username=username, passhash=password_hash, name=name)
     db.session.add(new_user)
     db.session.commit()
+    return redirect(url_for("login"))
+
+
+@app.route("/profile")
+@auth_required
+def profile():
+    user = User.query.get(session["user_id"])
+    return render_template("profile.html", user=user)
+
+
+@app.route("/profile", methods=["POST"])
+@auth_required
+def profile_post():
+    name = request.form.get("name")
+    username = request.form.get("username")
+    cpassword = request.form.get("cpassword")
+    password = request.form.get("password")
+
+    user = User.query.get(session["user_id"])
+    new_username = User.query.filter_by(username=username).first()
+    if new_username:
+        flash("Username already exists")
+        return redirect(url_for("profile"))
+
+    if not check_password_hash(user.passhash, cpassword):
+        flash("Current passwords do not match")
+        return redirect(url_for("profile"))
+
+    if check_password_hash(user.passhash, password):
+        flash("New password cannot be same as the old password")
+        return redirect(url_for("profile"))
+
+    new_password_hash = generate_password_hash(password)
+    user.username = username
+    user.passhash = new_password_hash
+    user.name = name
+    db.session.commit()
+    flash("Profile updated successfully")
+    return redirect(url_for("profile"))
+
+
+@app.route("/logout")
+@auth_required
+def logout():
+    session.pop("user_id")
     return redirect(url_for("login"))

@@ -1,3 +1,4 @@
+from sqlalchemy import Nullable
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
@@ -14,20 +15,21 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
 
 
-class Category(db.Model):
+class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False, unique=True)
 
-    products = db.relationship("Books", backref="category", lazy=True)
+    products = db.relationship("Books", backref="section", lazy=True)
 
 
 class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    man_date = db.Column(db.Date, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+    content = db.Column(db.Float, nullable=False)
+    author = db.Column(db.String(64), nullable=False)
+    date_issued = db.Column(db.Date, nullable=False)
+    return_date = db.Column(db.Date, nullable=False)
+    section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
 
     carts = db.relationship("Cart", backref="book", lazy=True)
     orders = db.relationship("Orders", backref="book", lazy=True)
