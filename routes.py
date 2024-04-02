@@ -1,22 +1,18 @@
-from crypt import methods
 from flask import (
     flash,
     redirect,
     render_template,
     request,
     url_for,
-    redirect,
-    flash,
     session,
 )
-
 from app import app
-from models import db, User
+from models import db, Section, User
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 
-# decorator for auth required
+# decorator for auth required for users
 def auth_required(func):
     @wraps(func)
     def inner(*args, **kwargs):
@@ -25,6 +21,24 @@ def auth_required(func):
         else:
             flash("Please login to continue")
             return redirect(url_for("login"))
+
+    return inner
+
+
+# decorator for auth required for admin
+def admin_required(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        if "user_id" not in session:
+            flash("Please login to continue")
+            return redirect(url_for("login"))
+
+        user = User.query.get(session["user_id"])
+
+        if not user.is_admin:
+            flash("You are not authorized to access this page")
+            return redirect(url_for("index"))
+        return func(*args, **kwargs)
 
     return inner
 
@@ -114,21 +128,26 @@ def profile():
 @auth_required
 def profile_post():
     name = request.form.get("name")
-    username = request.form.get("username")
+    username = request.form.get("username")  # rajarshiroy
     cpassword = request.form.get("cpassword")
     password = request.form.get("password")
 
-    user = User.query.get(session["user_id"])
-    new_username = User.query.filter_by(username=username).first()
-    if new_username:
-        flash("Username already exists")
+    if not name or not username or not cpassword or not password:
+        flash("Please fill out all the fields")
         return redirect(url_for("profile"))
+
+    user = User.query.get(session["user_id"])
+    if username != user.username:  # rajarshiroy != rajarshiroy2
+        new_username = User.query.filter_by(username=username).first()
+        if new_username:
+            flash("Username already exists")
+            return redirect(url_for("profile"))
 
     if not check_password_hash(user.passhash, cpassword):
         flash("Current passwords do not match")
         return redirect(url_for("profile"))
 
-    if check_password_hash(user.passhash, password):
+    if check_password_hash(cpassword, password):
         flash("New password cannot be same as the old password")
         return redirect(url_for("profile"))
 
@@ -146,3 +165,66 @@ def profile_post():
 def logout():
     session.pop("user_id")
     return redirect(url_for("login"))
+
+
+# admin section
+@app.route("/admin")
+@admin_required
+def admin():
+    sections = Section.query.all()
+    return render_template("admin.html", sections=sections)
+
+
+@app.route("/section/add")
+@admin_required
+def add_section():
+    return render_template("/section/add.html")
+
+
+@app.route("/section/add", methods=["POST"])
+@admin_required
+def add_section_post():
+    name = request.form.get("name")
+
+    if not name:
+        flash("Please fill out all the fields")
+        return redirect(url_for("add_section"))
+
+    section = Section(name=name)
+    db.session.add(section)
+    db.session.commit()
+
+    flash("Section created successfully")
+    return redirect(url_for("admin"))
+
+
+@app.route("/section/<int:id>/")
+@admin_required
+def show_section(id):
+    return "show section"
+
+
+@app.route("/section/<int:id>/edit")
+@admin_required
+def edit_section(id):
+    section = Section.query.get(id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+    return render_template("/section/edit.html", section=section)
+
+
+@app.route("/section/<int:id>/edit", methods=["POST"])
+@admin_required
+def edit_section_post(id):
+    section = Section.query.get(id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+    return render_template("/section/edit.html", section=section)
+
+
+@app.route("/section/<int:id>/delete")
+@admin_required
+def delete_section(id):
+    return "show section"
