@@ -235,16 +235,6 @@ def show_section(id):
     return render_template("/section/show.html", section=section)
 
 
-# @app.route("/section/<int:id>/", methods=['POST'])
-# @admin_required
-# def show_section_post(id):
-#     section = Section.query.get(id)
-#     if not section:
-#         flash("Section does not exist")
-#         return redirect(url_for("admin"))
-#     return render_template("/section/show.html", section=section)
-
-
 @app.route("/section/<int:id>/edit")
 @admin_required
 def edit_section(id):
@@ -320,18 +310,39 @@ def add_book(section_id):
     return render_template("book/add.html", section=section, sections=sections)
 
 
-@app.route("/section/add", methods=["POST"])
+@app.route("/book/add/", methods=["POST"])
 @admin_required
 def add_book_post():
     name = request.form.get("name")
+    content = request.form.get("content")
+    author = request.form.get("author")
+    date_issued = request.form.get("date_issued")
+    return_date = request.form.get("return_date")
+    section_id = request.form.get("section_id")
 
-    if not name:
-        flash("Please fill out all the fields")
-        return redirect(url_for("add_section"))
+    section = Section.query.get(section_id)
 
-    section = Section(name=name)
-    db.session.add(section)
+    if not section:
+        flash("Cateogory does not exist")
+        return redirect(url_for("admin"))
+
+    if not name or not content or not author or not date_issued or not return_date:
+        flash("All fields are mandatory")
+        return redirect(url_for("add_book", section_id=section_id))
+
+    date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
+    return_date = datetime.strptime(return_date, "%Y-%m-%d")
+
+    book = Books(
+        name=name,
+        content=content,
+        author=author,
+        date_issued=date_issued,
+        return_date=return_date,
+        section=section,
+    )
+
+    db.session.add(book)
     db.session.commit()
-
-    flash("Section created successfully")
-    return redirect(url_for("admin"))
+    flash("Book added successfully")
+    return redirect(url_for("show_section", id=section_id))

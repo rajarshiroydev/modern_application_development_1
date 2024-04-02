@@ -5,42 +5,33 @@ Add Books
 {% endblock %}
 
 {% block content %}
+
 <h1 class="display-1">Add Books</h1>
-
-
-{#
-id = db.Column(db.Integer, primary_key=True)
-name = db.Column(db.String(64), nullable=False)
-content = db.Column(db.String(256), nullable=False)
-author = db.Column(db.String(64), nullable=False)
-date_issued = db.Column(db.Date, nullable=False)
-return_date = db.Column(db.Date, nullable=False)
-#}
 
 <form action="{{url_for('add_book_post')}}" method="post" class="form">
     <div class="form-group">
         <label for="name" class="form-label">Book Name</label>
-        <input type="text" name="name" id="name" class="form-control" required>
+        <input type="text" name="name" id="name" class="form-control">
     </div>
     <div class="form-group">
         <label for="content" class="form-label">Content</label>
-        <input type="text" name="content" id="content" class="form-control" required>
+        <input type="text" name="content" id="content" class="form-control">
     </div>
     <div class="form-group">
         <label for="author" class="form-label">Author</label>
-        <input type="text" name="author" id="author" class="form-control" required>
+        <input type="text" name="author" id="author" class="form-control">
     </div>
     <div class="form-group">
         <label for="date_issued" class="form-label">Date Issued</label>
-        <input type="date" name="date_issued" id="date_issued" class="form-control" required>
+        <input type="date" name="date_issued" id="date_issued" class="form-control">
     </div>
     <div class="form-group">
         <label for="return_date" class="form-label">Return Date</label>
-        <input type="date" name="return_date" id="return_date" class="form-control" required>
+        <input type="date" name="return_date" id="return_date" class="form-control">
     </div>
     <div class="form-group">
         <label for="section_id" class="form-label">Section</label>
-        <select name="section_id" id="section_id" class="form-control" required>
+        <select name="section_id" id="section_id" class="form-control">
             {% for cat in sections %}
             {% if cat.id == section.id %}
             <option selected value="{{cat.id}}">{{cat.name}}</option>
@@ -50,6 +41,10 @@ return_date = db.Column(db.Date, nullable=False)
             {% endfor %}
         </select>
     </div>
-
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-plus"></i>
+        Add
+    </button>
 </form>
+
 {% endblock %}
