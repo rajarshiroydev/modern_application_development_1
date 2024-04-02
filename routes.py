@@ -217,14 +217,47 @@ def edit_section(id):
 @app.route("/section/<int:id>/edit", methods=["POST"])
 @admin_required
 def edit_section_post(id):
+    # fetches the section object(instance) of the given id
     section = Section.query.get(id)
+
+    # checks if the section exists or not
     if not section:
         flash("Section does not exist")
         return redirect(url_for("admin"))
-    return render_template("/section/edit.html", section=section)
+    # fetches the name from the html form for editing the section name
+    name = request.form.get("name")
+
+    # if the user leaves the form empty, then the below error message is given
+    if not name:
+        flash("Please fill out all the fields")
+        return redirect(url_for("edit_section", id=id))
+
+    # updated with the new section name, committed to the db, success message shown, redirected to admin dashboard
+    section.name = name
+    db.session.commit()
+    flash("Category updated successfully")
+    return redirect(url_for("admin"))
 
 
 @app.route("/section/<int:id>/delete")
 @admin_required
 def delete_section(id):
-    return "show section"
+    section = Section.query.get(id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+    return render_template("/section/delete.html", section=section)
+
+
+@app.route("/section/<int:id>/delete", methods=["POST"])
+@admin_required
+def delete_section_post(id):
+    section = Section.query.get(id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+
+    db.session.delete(section)
+    db.session.commit()
+    flash("Section deleted successfully")
+    return redirect(url_for("admin"))
