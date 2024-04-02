@@ -1,4 +1,3 @@
-from sqlalchemy import Nullable
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
@@ -19,13 +18,13 @@ class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False, unique=True)
 
-    products = db.relationship("Books", backref="section", lazy=True)
+    books = db.relationship("Books", backref="section", lazy=True)
 
 
 class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    content = db.Column(db.Float, nullable=False)
+    content = db.Column(db.String(256), nullable=False)
     author = db.Column(db.String(64), nullable=False)
     date_issued = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=False)
@@ -33,6 +32,13 @@ class Books(db.Model):
 
     carts = db.relationship("Cart", backref="book", lazy=True)
     orders = db.relationship("Orders", backref="book", lazy=True)
+
+
+class Requests(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
+
+    requests = db.relationship("Books", backref="requests", lazy=True)
 
 
 class Cart(db.Model):

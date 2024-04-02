@@ -7,12 +7,13 @@ from flask import (
     session,
 )
 from app import app
-from models import db, Section, User
+from models import db, Section, User, Books
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from datetime import datetime
 
 
-# decorator for auth required for users
+# Decorator for authentication of users
 def auth_required(func):
     @wraps(func)
     def inner(*args, **kwargs):
@@ -25,7 +26,7 @@ def auth_required(func):
     return inner
 
 
-# decorator for auth required for admin
+# Decorator for authentication of admin
 def admin_required(func):
     @wraps(func)
     def inner(*args, **kwargs):
@@ -43,6 +44,10 @@ def admin_required(func):
     return inner
 
 
+# ----------------------------Register, Login and Logout------------------------------------#
+
+
+# index page
 @app.route("/")
 @auth_required
 def index():
@@ -50,47 +55,17 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
-
-@app.route("/login", methods=["POST"])
-def login_post():
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    if not username or not password:
-        flash("Please fill out all the fields")
-        return redirect(url_for("login"))
-
-    # returns a boolean value on whether the user exists of not
-    user = User.query.filter_by(username=username).first()
-
-    if not user:
-        flash("Username does not exist")
-        return redirect(url_for("login"))
-
-    if not check_password_hash(user.passhash, password):
-        flash("Incorrect password")
-        return redirect(url_for("login"))
-
-    session["user_id"] = (
-        user.id
-    )  # user_id is a varible and the key of the dictionary session
-    flash("Login successful")
-    return redirect(url_for("index"))
-
-
+# register page
 @app.route("/register")
 def register():
     return render_template("register.html")
 
 
+# register page post
 @app.route("/register", methods=["POST"])
 def register_post():
-    name = request.form.get("name")
     # name of the input in the form should match the name inside get
+    name = request.form.get("name")
     username = request.form.get("username")
     password = request.form.get("password")
     confirm_password = request.form.get("confirm_password")
@@ -117,6 +92,62 @@ def register_post():
     return redirect(url_for("login"))
 
 
+# login page
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+# login page post
+@app.route("/login", methods=["POST"])
+def login_post():
+    # fetches the username and password from the html login form
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    # checks if all the fields are filled
+    if not username or not password:
+        flash("Please fill out all the fields")
+        return redirect(url_for("login"))
+
+    # returns a boolean value on whether the user exists of not
+    # the first username is the username field in the model User
+    # the second username is the varible username which is fetched from the html form
+    user = User.query.filter_by(username=username).first()
+
+    # if the user doesn't exist, then it shows error msg
+    if not user:
+        flash("Username does not exist")
+        return redirect(url_for("login"))
+
+    # if the user password do not match then it shows error msg
+    if not check_password_hash(user.passhash, password):
+        flash("Incorrect password")
+        return redirect(url_for("login"))
+
+    # user_id is a varible and the key of the dictionary session
+    session["user_id"] = user.id
+    session["is_admin"] = user.is_admin
+
+    flash("Login successful")
+
+    if user.is_admin:
+        return redirect(url_for(""))
+    else:
+        return redirect(url_for("index"))
+
+
+@app.route("/logout")
+@auth_required
+def logout():
+    session.pop("user_id")
+    return redirect(url_for("login"))
+
+
+# ------------------------------Profile Page------------------------------------#
+
+
+# profile page
 @app.route("/profile")
 @auth_required
 def profile():
@@ -160,14 +191,10 @@ def profile_post():
     return redirect(url_for("profile"))
 
 
-@app.route("/logout")
-@auth_required
-def logout():
-    session.pop("user_id")
-    return redirect(url_for("login"))
+# ------------------------------Admin & Sections------------------------------------#
 
 
-# admin section
+# admin page
 @app.route("/admin")
 @admin_required
 def admin():
@@ -201,7 +228,21 @@ def add_section_post():
 @app.route("/section/<int:id>/")
 @admin_required
 def show_section(id):
-    return "show section"
+    section = Section.query.get(id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+    return render_template("/section/show.html", section=section)
+
+
+# @app.route("/section/<int:id>/", methods=['POST'])
+# @admin_required
+# def show_section_post(id):
+#     section = Section.query.get(id)
+#     if not section:
+#         flash("Section does not exist")
+#         return redirect(url_for("admin"))
+#     return render_template("/section/show.html", section=section)
 
 
 @app.route("/section/<int:id>/edit")
@@ -235,7 +276,7 @@ def edit_section_post(id):
     # updated with the new section name, committed to the db, success message shown, redirected to admin dashboard
     section.name = name
     db.session.commit()
-    flash("Category updated successfully")
+    flash("Section updated successfully")
     return redirect(url_for("admin"))
 
 
@@ -260,4 +301,37 @@ def delete_section_post(id):
     db.session.delete(section)
     db.session.commit()
     flash("Section deleted successfully")
+    return redirect(url_for("admin"))
+
+
+# ------------------------------Admin & Books------------------------------------#
+
+
+# Book
+@app.route("/book/add/<int:section_id>")
+@admin_required
+def add_book(section_id):
+    sections = Section.query.all()
+    section = Section.query.get(section_id)
+    if not section:
+        flash("Section does not exist")
+        return redirect(url_for("admin"))
+    # now = datetime.now().strftime('%Y-%m-%d')
+    return render_template("book/add.html", section=section, sections=sections)
+
+
+@app.route("/section/add", methods=["POST"])
+@admin_required
+def add_book_post():
+    name = request.form.get("name")
+
+    if not name:
+        flash("Please fill out all the fields")
+        return redirect(url_for("add_section"))
+
+    section = Section(name=name)
+    db.session.add(section)
+    db.session.commit()
+
+    flash("Section created successfully")
     return redirect(url_for("admin"))

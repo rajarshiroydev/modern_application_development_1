@@ -5,7 +5,7 @@ Admin Dashboard
 {% endblock %}
 
 {% block content %}
-<h1 class="display-1">Admin Dashboard</h1>
+{# <h1 class="display-1">Admin Dashboard</h1> #}
 
 <h2 class="display-5">Sections:</h2>
 
@@ -14,6 +14,7 @@ Admin Dashboard
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>No of Books</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -22,6 +23,7 @@ Admin Dashboard
         <tr>
             <td style="font-size: 25px">{{section.id}}</td>
             <td style="font-size: 25px">{{section.name}}</td>
+            <td style="font-size: 25px">{{section.books|length}}</td>
             <td>
                 <a href="{{url_for('show_section', id=section.id)}}" class="btn btn-primary">
                     <i class="fas fa-search"></i>
@@ -45,3 +47,23 @@ Admin Dashboard
     Add Section
 </a>
 {% endblock %}
+
+
+
+{# 
+
+Admin
+
+profile
+sections
+user requests - the book that they want -accept/reject/view
+Date issue/return date - list of book issued to users - revoke
+
+ #}
+
+
+
+
+
+
+
