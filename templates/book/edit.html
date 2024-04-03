@@ -1,39 +1,39 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Add Books
+Edit Books
 {% endblock %}
 
 {% block content %}
 
-<h1 class="display-1">Add Books</h1>
+<h1 class="display-1">Edit Books</h1>
 
-<form action="{{url_for('add_book_post')}}" method="post" class="form">
+<form action="{{url_for('edit_book_post', id=book.id)}}" method="post" class="form">
     <div class="form-group">
         <label for="name" class="form-label">Book Name</label>
-        <input type="text" name="name" id="name" class="form-control">
+        <input type="text" name="name" id="name" value="{{book.name}}" class="form-control">
     </div>
     <div class="form-group">
         <label for="content" class="form-label">Content</label>
-        <input type="text" name="content" id="content" class="form-control">
+        <input type="text" name="content" id="content" value="{{book.content}}" class="form-control">
     </div>
     <div class="form-group">
         <label for="author" class="form-label">Author</label>
-        <input type="text" name="author" id="author" class="form-control">
+        <input type="text" name="author" id="author" value="{{book.author}}" class="form-control">
     </div>
     <div class="form-group">
         <label for="date_issued" class="form-label">Date Issued</label>
-        <input type="date" name="date_issued" id="date_issued" value="{{now}}" class="form-control">
+        <input type="date" name="date_issued" id="date_issued" value="{{book_date_issued}}" class="form-control">
     </div>
     <div class="form-group">
         <label for="return_date" class="form-label">Return Date</label>
-        <input type="date" name="return_date" id="return_date" value="{{now}}" class="form-control">
+        <input type="date" name="return_date" id="return_date" value="{{book_return_date}}" class="form-control">
     </div>
     <div class="form-group">
         <label for="section_id" class="form-label">Section</label>
         <select name="section_id" id="section_id" class="form-control">
             {% for cat in sections %}
-            {% if cat.id == section.id %}
+            {% if cat.id == book.section_id %}
             <option selected value="{{cat.id}}">{{cat.name}}</option>
             {% else %}
             <option value="{{cat.id}}">{{cat.name}}</option>
@@ -42,8 +42,8 @@ Add Books
         </select>
     </div>
     <button type="submit" class="btn btn-success">
-        <i class="fas fa-plus"></i>
-        Add
+        <i class="fas fa-edit"></i>
+        Edit
     </button>
 </form>
 

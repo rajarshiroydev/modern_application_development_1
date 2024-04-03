@@ -127,16 +127,17 @@ def login_post():
 
     # user_id is a varible and the key of the dictionary session
     session["user_id"] = user.id
-    session["is_admin"] = user.is_admin
+    # session["is_admin"] = user.is_admin
 
     flash("Login successful")
 
     if user.is_admin:
-        return redirect(url_for(""))
+        return redirect(url_for("admin"))
     else:
         return redirect(url_for("index"))
 
 
+# logout button
 @app.route("/logout")
 @auth_required
 def logout():
@@ -297,7 +298,6 @@ def delete_section_post(id):
 # ------------------------------Admin & Books------------------------------------#
 
 
-# Book
 @app.route("/book/add/<int:section_id>")
 @admin_required
 def add_book(section_id):
@@ -306,8 +306,10 @@ def add_book(section_id):
     if not section:
         flash("Section does not exist")
         return redirect(url_for("admin"))
-    # now = datetime.now().strftime('%Y-%m-%d')
-    return render_template("book/add.html", section=section, sections=sections)
+
+    now = datetime.now().strftime("%Y-%m-%d")
+
+    return render_template("book/add.html", section=section, sections=sections, now=now)
 
 
 @app.route("/book/add/", methods=["POST"])
@@ -333,6 +335,16 @@ def add_book_post():
     date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
     return_date = datetime.strptime(return_date, "%Y-%m-%d")
 
+    # formatted_date_issued = date_issued.strftime("%d-%m-%Y")
+
+    if date_issued > datetime.now():
+        flash("Issue date is ahead of current date")
+        return redirect(url_for("add_book", section_id=section_id))
+
+    if return_date < date_issued:
+        flash("Return date cannot be behind issue date")
+        return redirect(url_for("add_book", section_id=section_id))
+
     book = Books(
         name=name,
         content=content,
@@ -346,3 +358,95 @@ def add_book_post():
     db.session.commit()
     flash("Book added successfully")
     return redirect(url_for("show_section", id=section_id))
+
+
+@app.route("/book/<int:id>/edit>")
+@admin_required
+def edit_book(id):
+    sections = Section.query.all()
+    book = Books.query.get(id)
+    book_date_issued = book.date_issued
+    book_return_date = book.return_date
+    return render_template(
+        "/book/edit.html",
+        sections=sections,
+        book=book,
+        book_date_issued=book_date_issued,
+        book_return_date=book_return_date,
+    )
+
+
+@app.route("/book/<int:id>/edit>", methods=["POST"])
+@admin_required
+def edit_book_post(id):
+    name = request.form.get("name")
+    content = request.form.get("content")
+    author = request.form.get("author")
+    date_issued = request.form.get("date_issued")
+    return_date = request.form.get("return_date")
+    section_id = request.form.get("section_id")
+
+    section = Section.query.get(section_id)
+
+    if not section:
+        flash("Cateogory does not exist")
+        return redirect(url_for("admin"))
+
+    if not name or not content or not author or not date_issued or not return_date:
+        flash("All fields are mandatory")
+        return redirect(url_for("add_book", section_id=section_id))
+
+    date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
+    return_date = datetime.strptime(return_date, "%Y-%m-%d")
+
+    # formatted_date_issued = date_issued.strftime("%d-%m-%Y")
+
+    if date_issued > datetime.now():
+        flash("Issue date is ahead of current date")
+        return redirect(url_for("add_book", section_id=section_id))
+
+    if return_date < date_issued:
+        flash("Return date cannot be behind issue date")
+        return redirect(url_for("add_book", section_id=section_id))
+
+    book = Books.query.get(id)
+
+    book.name = name
+    book.content = content
+    book.author = author
+    book.date_issued = date_issued
+    book.return_date = return_date
+    book.section = section
+
+    db.session.commit()
+
+    flash("Book edited successfully")
+    return redirect(url_for("show_section", id=section_id))
+
+
+@app.route("/book/<int:id>/delete")
+@admin_required
+def delete_book(id):
+    book = Books.query.get(id)
+    if not book:
+        flash("Book does not exist")
+        return redirect(url_for("admin"))
+    return render_template("/book/delete.html", book=book)
+
+
+@app.route("/book/<int:id>/delete", methods=["POST"])
+@admin_required
+def delete_book_post(id):
+    book = Books.query.get(id)
+
+    if not book:
+        flash("Book does not exist")
+        return redirect(url_for("admin"))
+
+    category_id = book.section_id
+
+    db.session.delete(book)
+    db.session.commit()
+
+    flash("Book deleted successfully")
+    return redirect(url_for("show_section", id=category_id))

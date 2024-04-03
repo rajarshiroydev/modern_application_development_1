@@ -6,15 +6,14 @@ Profile Page
 
 {% block content %}
 <h1 class="display-1">
-    Hello
-    <span class="text-muted">@{{user.username}}</span>
+    <span class="text-muted">{{user.username}}'s</span>
+    Profile
 </h1>
-<a href="{{url_for('logout')}}" class="btn btn-outline-danger">Logout</a>
 
 {# form to change password and username #}
 <form action="" method="post" class="form">
     <div class="form-group">
-        <label for="name" class="form-label">Name:</label>
+        <label for="name" class="form-label">Name</label>
         <input type="text" name="name" id="name" class="form-control" placeholder="{{user.name}}">
     </div>
     <div class="form-group">
