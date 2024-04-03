@@ -18,7 +18,9 @@ class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False, unique=True)
 
-    books = db.relationship("Books", backref="section", lazy=True)
+    books = db.relationship(
+        "Books", backref="section", lazy=True, cascade="all, delete-orphan"
+    )
 
 
 class Books(db.Model):

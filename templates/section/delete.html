@@ -6,7 +6,11 @@ Delete Section
 
 {% block content %}
 <h1 class="display-1">Delete Section</h1>
-<p class="f-3">Are you sure you want to delete {{section.name}}?</p>
+{% if section.books|length > 0 %}
+<p class="f-3">This section contains books. If you delete this section, the books will be deleted too.
+</p>
+{% endif %}
+<p class="f-3">Are you sure you want to delete {{section.name}} section?</p>
 <form action="" method="post" class="form">
     <button type="submit" class="btn btn-danger">
         <i class="fas fa-trash"></i>
