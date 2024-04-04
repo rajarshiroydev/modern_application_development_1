@@ -8,22 +8,23 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 {% if 'user_id' in session %}
-                {# {% if session['user_id'].is_admin %}
+                {% if session['is_admin'] %}
                 <!-- This block will only be shown if the user is an admin -->
-                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
-                {% endif %} #}
-                <a class="nav-link" href="{{ url_for('admin') }}">Sections</a>
+                <a class=" nav-link" href="{{ url_for('admin') }}">Sections</a>
                 <a class="nav-link" href="{{ url_for('index') }}">Issued Books</a>
                 <a class="nav-link" href="{{ url_for('index') }}">User Requests</a>
                 <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
                 <a class="btn btn-outline-danger logout" href="{{url_for('logout')}}">Logout</a>
+                {% else %}
+                <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                <a class="btn btn-outline-danger logout" href="{{url_for('logout')}}">Logout</a>
+                {% endif %}
+                {% else %}
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+                <!--url_for takes func name as the input-->
             </div>
-            {% else %}
-            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-            {% endif %}
-            <!--url_for takes func name as the input-->
         </div>
-    </div>
     </div>
 </nav>

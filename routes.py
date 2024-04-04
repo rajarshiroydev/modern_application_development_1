@@ -51,8 +51,8 @@ def admin_required(func):
 @app.route("/")
 @auth_required
 def index():
-    # user_id in session
-    return render_template("index.html")
+    sections = Section.query.all()
+    return render_template("index.html", sections=sections)
 
 
 # register page
@@ -127,7 +127,7 @@ def login_post():
 
     # user_id is a varible and the key of the dictionary session
     session["user_id"] = user.id
-    # session["is_admin"] = user.is_admin
+    session["is_admin"] = user.is_admin
 
     flash("Login successful")
 

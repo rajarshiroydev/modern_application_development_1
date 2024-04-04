@@ -1,9 +1,7 @@
-{% extends 'layout.html' %}
-
-{% block title %}
-Hello World
-{% endblock %}
+{% extends "layout.html" %}
 
 {% block content %}
-<h2></h2>
-{%endblock %}
+{% include "searchbar.html" %}
+<hr>
+{{sections|length}}
+{% endblock %}
