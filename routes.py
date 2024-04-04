@@ -133,7 +133,7 @@ def login_post():
 
     if user.is_admin:
         return redirect(url_for("admin"))
-    else:
+    else:  
         return redirect(url_for("index"))
 
 

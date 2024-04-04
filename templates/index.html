@@ -1,7 +1,52 @@
 {% extends "layout.html" %}
-
+{% block title %}
+Library
+{% endblock title %}
 {% block content %}
 {% include "searchbar.html" %}
 <hr>
-{{sections|length}}
+<div class="sections-list">
+    {% for section in sections %}
+    <h2>{{section.name}}</h2>
+    <div class="books">
+        {% for book in section.books %}
+        <div class="card" style="width: 18rem;">
+            <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}">
+            <div class="card-body">
+                <h5 class="card-title">{{book.name}}</h5>
+                <div class="author">
+                    <strong>Author: </strong> {{book.author}}
+                </div>
+                <div class="content">
+                    <strong>Content: </strong> {{book.content}}
+                </div>
+
+                <a href="#" class="btn btn-primary" style="margin-top: 5px;">GET</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor%}
+</div>
+{% endblock %}
+
+{% block style %}
+<style>
+    .sections-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+    }
+
+    .books {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+    }
+
+    .card {
+        margin: 10px;
+    }
+</style>
 {% endblock %}
