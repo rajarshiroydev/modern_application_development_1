@@ -10,6 +10,9 @@ Library
     <h2 style="margin-top: 20px;">{{section.name}}</h2>
     <div class="books" style="margin-bottom: 20px;">
         {% for book in section.books %}
+        {% if not param or
+        (param == 'book_name' and book_name.lower() in book.name.lower()) or
+        (param == 'author_name'and author_name.lower() in book.author.lower()) %}
         <div class="card" style="width: 18rem; margin-left: 0; margin-right: 20px">
             <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}">
             <div class="card-body">
@@ -25,6 +28,7 @@ Library
                 </form>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     {% endfor%}

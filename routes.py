@@ -453,6 +453,21 @@ def delete_book_post(id):
 @auth_required
 def index():
     sections = Section.query.all()
+
+    parameter = request.args.get("parameter")
+    query = request.args.get("query")
+
+    if parameter == "section_name":
+        sections = Section.query.filter(Section.name.ilike(f"%{query}%")).all()
+    elif parameter == "book_name":
+        return render_template(
+            "index.html", sections=sections, param=parameter, book_name=query
+        )
+    elif parameter == "author_name":
+        return render_template(
+            "index.html", sections=sections, param=parameter, author_name=query
+        )
+
     return render_template("index.html", sections=sections)
 
 
