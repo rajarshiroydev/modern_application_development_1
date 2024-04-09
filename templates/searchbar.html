@@ -4,12 +4,16 @@
             <form action="" method="GET">
                 <div class="input-group">
                     <select name="parameter" id="parameter" class="parameter form-select">
-                        <option value="section_name">Section</option>
-                        <option value="book_name">Books</option>
-                        <option value="author_name">Author</option>
+                        {% for parameter in parameters %}
+                        {% if param and parameter == param %}
+                        <option value="{{parameter}}" selected>{{parameters[parameter]}}</option>
+                        {% else %}
+                        <option value="{{parameter}}">{{parameters[parameter]}}</option>
+                        {% endif %}
+                        {% endfor %}
                     </select>
-                    <input type="text" name="query" class="form-control" placeholder="Search for ..."
-                        style="border-radius: 0px 7px 7px 0px;">
+                    <input type="text" name="query" value="{{query}}" class="form-control w-50"
+                        placeholder="Search for ..." style="border-radius: 0px 7px 7px 0px;">
                     <span class="input-group-btn">
                         <button class="btn btn-outline-primary" style="margin-left: 10px;">Search</button>
                     </span>

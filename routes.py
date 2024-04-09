@@ -457,18 +457,37 @@ def index():
     parameter = request.args.get("parameter")
     query = request.args.get("query")
 
+    parameters = {
+        "section_name": "Section Name",
+        "book_name": "Book Name",
+        "author_name": "Author Name",
+    }
+
     if parameter == "section_name":
         sections = Section.query.filter(Section.name.ilike(f"%{query}%")).all()
+        return render_template(
+            "index.html", sections=sections, parameters=parameters, query=query
+        )
     elif parameter == "book_name":
         return render_template(
-            "index.html", sections=sections, param=parameter, book_name=query
+            "index.html",
+            sections=sections,
+            param=parameter,
+            book_name=query,
+            parameters=parameters,
+            query=query,
         )
     elif parameter == "author_name":
         return render_template(
-            "index.html", sections=sections, param=parameter, author_name=query
+            "index.html",
+            sections=sections,
+            param=parameter,
+            author_name=query,
+            parameters=parameters,
+            query=query,
         )
 
-    return render_template("index.html", sections=sections)
+    return render_template("index.html", sections=sections, parameters=parameters)
 
 
 @app.route("/add_to_cart/<int:book_id>", methods=["POST"])
@@ -498,3 +517,13 @@ def add_to_cart(book_id):
         flash("Book added to cart successfully!")
 
     return redirect(url_for("index"))
+
+
+# ------------------------------Cart------------------------------------#
+
+
+@app.route("/cart")
+@auth_required
+def cart():
+    carts = Cart.query.filter_by(user_id=session["user_id"]).all()
+    return render_template("cart.html", carts=carts)
