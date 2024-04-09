@@ -6,8 +6,10 @@ from flask import (
     url_for,
     session,
 )
+
+
 from app import app
-from models import db, Section, User, Books
+from models import db, Section, User, Books, Cart
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
@@ -45,14 +47,6 @@ def admin_required(func):
 
 
 # ----------------------------Register, Login and Logout------------------------------------#
-
-
-# index page
-@app.route("/")
-@auth_required
-def index():
-    sections = Section.query.all()
-    return render_template("index.html", sections=sections)
 
 
 # register page
@@ -133,7 +127,7 @@ def login_post():
 
     if user.is_admin:
         return redirect(url_for("admin"))
-    else:  
+    else:
         return redirect(url_for("index"))
 
 
@@ -223,7 +217,7 @@ def add_section_post():
     db.session.commit()
 
     flash("Section created successfully")
-    return redirect(url_for("admin"))
+    return render_template("admin.html")
 
 
 @app.route("/section/<int:id>/")
@@ -450,3 +444,42 @@ def delete_book_post(id):
 
     flash("Book deleted successfully")
     return redirect(url_for("show_section", id=category_id))
+
+
+# ------------------------------User------------------------------------#
+
+
+@app.route("/")
+@auth_required
+def index():
+    sections = Section.query.all()
+    return render_template("index.html", sections=sections)
+
+
+@app.route("/add_to_cart/<int:book_id>", methods=["POST"])
+@auth_required
+def add_to_cart(book_id):
+    book = Books.query.get(book_id)
+    if not book:
+        flash("Book does not exist")
+        return redirect(url_for("index"))
+
+    # check cart size
+    cart_size = Cart.query.filter_by(user_id=session["user_id"]).count()
+    if cart_size >= 5:
+        flash("You cannot add more than 5 books to your cart.")
+        return redirect(url_for("index"))
+
+    # checks if an item with the same user_if and book_id already exists
+    cart = Cart.query.filter_by(user_id=session["user_id"], book_id=book_id).first()
+
+    # if it does, then
+    if cart:  # If the book already exists in the cart
+        flash("You already have this book in your cart")
+    else:  # If the book is new to the cart
+        new_cart_item = Cart(user_id=session["user_id"], book_id=book_id)
+        db.session.add(new_cart_item)
+        db.session.commit()
+        flash("Book added to cart successfully!")
+
+    return redirect(url_for("index"))

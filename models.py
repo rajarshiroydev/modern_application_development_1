@@ -1,6 +1,7 @@
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
+# from datetime import datetime
 
 
 db = SQLAlchemy(app)
@@ -17,6 +18,9 @@ class User(db.Model):
 class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False, unique=True)
+    # date_created = db.Column(
+    #     db.Date, nullable=False, default=datetime.now(datetime.UTC)
+    # )
 
     books = db.relationship(
         "Books", backref="section", lazy=True, cascade="all, delete-orphan"
@@ -47,7 +51,7 @@ class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
+    # quantity = db.Column(db.Integer, nullable=False, default=0)
 
 
 class Orders(db.Model):

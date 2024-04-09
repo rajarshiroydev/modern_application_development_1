@@ -24,6 +24,8 @@ Admin Dashboard
             <td style="font-size: 25px">{{section.id}}</td>
             <td style="font-size: 25px">{{section.name}}</td>
             <td style="font-size: 25px">{{section.books|length}}</td>
+            {# <td style="font-size: 25px">{{section.date_created}}</td> #}
+
             <td>
                 <a href="{{url_for('show_section', id=section.id)}}" class="btn btn-primary">
                     <i class="fas fa-search"></i>
