@@ -527,3 +527,19 @@ def add_to_cart(book_id):
 def cart():
     carts = Cart.query.filter_by(user_id=session["user_id"]).all()
     return render_template("cart.html", carts=carts)
+
+
+@app.route("/cart/<int:id>/delete", methods=['POST'])
+@auth_required
+def delete_cart(id):
+    cart = Cart.query.get(id)
+    if not cart:
+        flash("Cart does not exist")
+        return redirect(url_for("cart"))
+    if cart.user_id != session["user_id"]:
+        flash("You are not authorized to access this page")
+        return redirect(url_for("cart"))
+    db.session.delete(cart)
+    db.session.commit()
+    flash("Cart deleted successfully")
+    return redirect(url_for("cart"))

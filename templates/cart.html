@@ -5,5 +5,44 @@ Cart
 {% endblock title %}
 
 {% block content %}
-<h1>Cart</h1>
+{% if carts|length > 0 %}
+<h1 class="display-1">Cart</h1>
+
+<hr>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            {# <th>Issue Date</th> #}
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cart in carts %}
+        <tr>
+            <td>{{cart.book.name}}</td>
+            <td>{{cart.author}}</td>
+            {# <td>{{cart.issue_date}}</td> #}
+            <td>
+                <form action="{{url_for('delete_cart', id=cart.id)}}" method="post">
+                    <button class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Remove
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="#" class="btn btn-success">
+    <i class="fas fa-cart-shopping"></i>
+    Checkout
+</a>
+{% else %}
+<h1 class="display-1">Cart is Empty</h1>
+<hr>
+{% endif %}
 {% endblock content %}
