@@ -17,13 +17,27 @@ Library
             {# <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}"> #}
             <div class="card-body">
                 <h5 class="card-title">{{book.name}}</h5>
+                <br>
                 <div class="author">
                     <strong>Author: </strong> {{book.author}}
                 </div>
                 <div class="content">
                     <strong>Content: </strong> {{book.content}}
                 </div>
+                <br>
+                <strong>Choose Duration </strong>
                 <form action="{{url_for('add_to_cart', book_id=book.id)}}" class="form" method="POST">
+                    <div class="input-group">
+                        <select name="parameter" id="parameter" class="parameter form-select">
+                            <option value="">Hours</option>
+                            <option value="">Days</option>
+                            <option value="">Weeks</option>
+                        </select>
+                        <input type="number" name="query" class="form-control" value="1" min="1"
+                            style="border-radius: 0px 7px 7px 0px;">
+                        <span class="input-group-btn">
+                        </span>
+                    </div>
                     <input type="submit" value="GET" class="btn btn-success" style="margin-top: 10px">
                 </form>
             </div>
