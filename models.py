@@ -40,7 +40,7 @@ class Cart(db.Model):
     username = db.Column(db.Integer, db.ForeignKey("user.username"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
 
-    issued = db.relationship("Issued", backref="cart", lazy=True)
+    # issued = db.relationship("Cart", backref="issued", lazy=True)
 
 
 class Issued(db.Model):
@@ -51,7 +51,7 @@ class Issued(db.Model):
     date_issued = db.Column(db.Date)
     return_date = db.Column(db.Date)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    cart_id = db.Column(db.Integer, db.ForeignKey("cart.id"))
+    request_id = db.Column(db.Integer, db.ForeignKey("cart.id"))
 
 
 with app.app_context():

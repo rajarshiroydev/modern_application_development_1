@@ -9,7 +9,7 @@ from flask import (
 
 
 from app import app
-from models import db, Section, User, Books, Cart, Issued
+from models import db, Section, User, Books, Cart
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
@@ -491,6 +491,16 @@ def index():
     return render_template("index.html", sections=sections, parameters=parameters)
 
 
+# ------------------------------Cart------------------------------------#
+
+
+@app.route("/cart")
+@admin_required
+def cart():
+    carts = Cart.query.all()
+    return render_template("cart.html", carts=carts)
+
+
 @app.route("/add_to_cart/<int:book_id>", methods=["POST"])
 @auth_required
 def add_to_cart(book_id):
@@ -502,7 +512,7 @@ def add_to_cart(book_id):
     # check cart size
     cart_size = Cart.query.filter_by(user_id=session["user_id"]).count()
     if cart_size >= 5:
-        flash("You cannot request for more than 5 books.")
+        flash("You cannot cart for more than 5 books.")
         return redirect(url_for("index"))
 
     # checks if an item with the same user_if and book_id already exists
@@ -510,7 +520,7 @@ def add_to_cart(book_id):
 
     # if it does, then
     if cart:  # If the book already exists in the cart
-        flash("You have already requested for this book.")
+        flash("You have already carted for this book.")
     else:  # If the book is new to the cart
         new_cart_item = Cart(
             user_id=session["user_id"], book_id=book_id, username=session["username"]
@@ -522,33 +532,15 @@ def add_to_cart(book_id):
     return redirect(url_for("index"))
 
 
-# @app.route("/user_admin_requests/<int:id>")
-# @admin_required
-# def user_admin_requests():
-#     requests = Requests.query.filter_by(id)
-#     return render_template("user_admin_requests.html", requests=requests)
-
-
-# ------------------------------Cart------------------------------------#
-
-
-@app.route("/cart")
-@admin_required
-def cart():
-    carts = Cart.query.all()
-    return render_template("cart.html", carts=carts)
-
-
 @app.route("/cart/<int:id>/delete", methods=["POST"])
 @admin_required
 def delete_cart(id):
     cart = Cart.query.get(id)
+
     if not cart:
         flash("Cart does not exist")
         return redirect(url_for("cart"))
-    # if cart.user_id != session["user_id"]:
-    #     flash("You are not authorized to access this page")
-    #     return redirect(url_for("cart"))
+
     db.session.delete(cart)
     db.session.commit()
     flash("Item deleted successfully")
