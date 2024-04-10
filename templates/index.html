@@ -14,7 +14,7 @@ Library
         (param == 'book_name' and book_name.lower() in book.name.lower()) or
         (param == 'author_name'and author_name.lower() in book.author.lower()) %}
         <div class="card" style="width: 18rem; margin-left: 0; margin-right: 20px">
-            <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}">
+            {# <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}"> #}
             <div class="card-body">
                 <h5 class="card-title">{{book.name}}</h5>
                 <div class="author">
@@ -24,7 +24,7 @@ Library
                     <strong>Content: </strong> {{book.content}}
                 </div>
                 <form action="{{url_for('add_to_cart', book_id=book.id)}}" class="form" method="POST">
-                    <input type="submit" value="Add to Cart" class="btn btn-success" style="margin-top: 10px">
+                    <input type="submit" value="GET" class="btn btn-success" style="margin-top: 10px">
                 </form>
             </div>
         </div>

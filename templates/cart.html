@@ -6,30 +6,40 @@ Cart
 
 {% block content %}
 {% if carts|length > 0 %}
-<h1 class="display-1">Cart</h1>
+<h1 class="display-1">User Requests</h1>
 
 <hr>
 
 <table class="table">
     <thead>
         <tr>
+            <th>User ID</th>
+            <th>Userame</th>
             <th>Book Name</th>
             <th>Author</th>
-            {# <th>Issue Date</th> #}
+            <th>Issue Date</th>
+            <th>Return Date</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for cart in carts %}
         <tr>
+            <td>{{cart.user_id}}</td>
+            <td>{{cart.username}}</td>
             <td>{{cart.book.name}}</td>
-            <td>{{cart.author}}</td>
-            {# <td>{{cart.issue_date}}</td> #}
+            <td>{{cart.book.author}}</td>
+            <td>{{cart.book.date_issued}}</td>
+            <td>{{cart.book.return_date}}</td>
             <td>
                 <form action="{{url_for('delete_cart', id=cart.id)}}" method="post">
+                    <button class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Grant Access
+                    </button>
                     <button class="btn btn-danger">
                         <i class="fas fa-trash"></i>
-                        Remove
+                        Reject
                     </button>
                 </form>
             </td>
@@ -37,12 +47,8 @@ Cart
         {% endfor %}
     </tbody>
 </table>
-<a href="#" class="btn btn-success">
-    <i class="fas fa-cart-shopping"></i>
-    Checkout
-</a>
 {% else %}
-<h1 class="display-1">Cart is Empty</h1>
+<h1 class="display-1">No User Requests</h1>
 <hr>
 {% endif %}
 {% endblock content %}
