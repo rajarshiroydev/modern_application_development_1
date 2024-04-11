@@ -547,6 +547,7 @@ def issued(id):
 
     issuance = Issued(user_id=issued.user_id, book_id=issued.book_id)
     db.session.add(issuance)
+    db.session.delete(issued)
     db.session.commit()
 
     flash("Books issued successfully")
@@ -558,6 +559,13 @@ def issued(id):
 def issued_books():
     all_issued = Issued.query.all()
     return render_template("issued.html", all_issued=all_issued)
+
+
+@app.route("/issued_books_user")
+@auth_required
+def issued_books_user():
+    all_issued = Issued.query.filter_by(user_id=session["user_id"]).all()
+    return render_template("library.html", all_issued=all_issued)
 
 
 @app.route("/cart/<int:id>/delete", methods=["POST"])
