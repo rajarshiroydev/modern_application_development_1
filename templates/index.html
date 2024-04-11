@@ -25,20 +25,13 @@ Library
                     <strong>Content: </strong> {{book.content}}
                 </div>
                 <br>
-                <strong>Choose Duration </strong>
-                <form action="{{url_for('add_to_cart', book_id=book.id)}}" class="form" method="POST">
-                    <div class="input-group">
-                        <select name="parameter" id="parameter" class="parameter form-select">
-                            <option value="">Hours</option>
-                            <option value="">Days</option>
-                            <option value="">Weeks</option>
-                        </select>
-                        <input type="number" name="query" class="form-control" value="1" min="1"
-                            style="border-radius: 0px 7px 7px 0px;">
-                        <span class="input-group-btn">
-                        </span>
-                    </div>
-                    <input type="submit" value="GET" class="btn btn-success" style="margin-top: 10px">
+                <strong>Choose Duration</strong>
+                <form action="{{url_for('add_to_cart', book_id=book.id, duration=duration)}}" class="form"
+                    method="POST">
+                    <label for="duration" class="days">Days</label>
+                    <input type="number" name="duration" id="duration" class="form-control" value="1" min="1"
+                        style="border-radius: 0px 7px 7px 0px;">
+                    <input type="submit" value="Get Book" class="btn btn-success" style="margin-top: 20px">
                 </form>
             </div>
         </div>
@@ -66,6 +59,16 @@ Library
 
     .card {
         margin: 10px;
+    }
+
+    .days {
+        padding-top: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 10px;
+        border-color: #dee2e6;
     }
 </style>
 {% endblock %}

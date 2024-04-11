@@ -9,10 +9,10 @@ from flask import (
 
 
 from app import app
-from models import db, Section, User, Books, Cart
+from models import db, Section, User, Books, Cart, Issued
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Decorator for authentication of users
@@ -509,6 +509,10 @@ def add_to_cart(book_id):
         flash("Book does not exist")
         return redirect(url_for("index"))
 
+    duration = request.form.get("duration")
+    duration = int(duration)
+    book.return_date = datetime.now() + timedelta(days=duration)
+
     # check cart size
     cart_size = Cart.query.filter_by(user_id=session["user_id"]).count()
     if cart_size >= 5:
@@ -523,13 +527,32 @@ def add_to_cart(book_id):
         flash("You have already carted for this book.")
     else:  # If the book is new to the cart
         new_cart_item = Cart(
-            user_id=session["user_id"], book_id=book_id, username=session["username"]
+            user_id=session["user_id"],
+            book_id=book_id,
+            username=session["username"],
         )
+        new_return_date = Books(return_date=book.return_date)
+        db.session.add(new_return_date)
         db.session.add(new_cart_item)
         db.session.commit()
         flash("Requested book successfully!")
 
     return redirect(url_for("index"))
+
+
+@app.route("/issued/<int:id>", methods=["POST"])
+@admin_required
+def issued(id):
+    issued = Cart.query.get(id)
+
+    issuance = Issued(user_id=issued.user_id, book_id=issued.book_id)
+    db.session.add(issuance)
+    db.session.commit()
+
+    flash("Books issued successfully")
+
+    # all_issued = Issued.query.all()
+    return render_template("issued.html")
 
 
 @app.route("/cart/<int:id>/delete", methods=["POST"])
@@ -547,4 +570,4 @@ def delete_cart(id):
     return redirect(url_for("cart"))
 
 
-# ------------------------------User Library------------------------------------#
+# ------------------------------Issued Books------------------------------------#

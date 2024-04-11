@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Cart
+User Requests
 {% endblock title %}
 
 {% block content %}
@@ -32,12 +32,14 @@ Cart
             <td>{{cart.book.date_issued}}</td>
             <td>{{cart.book.return_date}}</td>
             <td>
-                <form action="{{url_for('delete_cart', id=cart.id)}}" method="post">
-                    <button class="btn btn-success">
+                <form action="{{url_for('issued', id=cart.id)}}" method="POST" method="POST" style=" display: inline;">
+                    <button class=" btn btn-success">
                         <i class="fas fa-plus"></i>
                         Grant
                     </button>
-                    <button class="btn btn-danger">
+                </form>
+                <form action="{{url_for('delete_cart', id=cart.id)}}" method="POST" style="display: inline;">
+                    <button class=" btn btn-danger">
                         <i class="fas fa-ban"></i>
                         Reject
                     </button>
@@ -52,3 +54,11 @@ Cart
 <hr>
 {% endif %}
 {% endblock content %}
+
+{% block style %}
+<style>
+    td {
+        font-size: 20px;
+    }
+</style>
+{% endblock style %}

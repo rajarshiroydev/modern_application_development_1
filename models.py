@@ -24,34 +24,27 @@ class Section(db.Model):
 
 class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(64), nullable=False)
-    date_issued = db.Column(db.Date, nullable=False)
-    return_date = db.Column(db.Date, nullable=False)
-    section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
+    name = db.Column(db.String(64))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(64))
+    date_issued = db.Column(db.Date)
+    return_date = db.Column(db.Date)
+    section_id = db.Column(db.Integer, db.ForeignKey("section.id"))
 
     carts = db.relationship("Cart", backref="book", lazy=True)
 
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    username = db.Column(db.Integer, db.ForeignKey("user.username"), nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
-
-    # issued = db.relationship("Cart", backref="issued", lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    username = db.Column(db.Integer, db.ForeignKey("user.username"))
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
 
 
 class Issued(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    content = db.Column(db.String(256))
-    author = db.Column(db.String(64))
-    date_issued = db.Column(db.Date)
-    return_date = db.Column(db.Date)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    request_id = db.Column(db.Integer, db.ForeignKey("cart.id"))
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
 
 
 with app.app_context():
