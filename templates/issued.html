@@ -17,6 +17,7 @@ Issued Books
             <th>Book Name</th>
             <th>Author</th>
             <th>Issue Date</th>
+            <th>Return Date</th>
             <th>Revoke</th>
         </tr>
     </thead>
@@ -25,10 +26,19 @@ Issued Books
         <tr>
             <td>{{item.user_id}}</td>
             <td>{{item.book_id}}</td>
-            {# <td>{{item.book.name}}</td>
-            <td>{{item.book.author}}</td>
-            <td>{{item.book.date_issued}}</td>
-            <td>{{item.book.return_date}}</td> #}
+            <td>{{item.username}}</td>
+            <td>{{item.author}}</td>
+            <td>{{item.date_issued}}</td>
+            <td>{{item.return_date}}</td>
+            <td>
+                <form action="{{url_for('revoke_book', book_id=item.book_id, user_id=item.user_id)}}" method="POST"
+                    style="display: inline;">
+                    <button class=" btn btn-danger">
+                        <i class="fas fa-ban"></i>
+                        Revoke
+                    </button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

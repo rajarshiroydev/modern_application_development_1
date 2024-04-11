@@ -545,7 +545,14 @@ def add_to_cart(book_id):
 def issued(id):
     issued = Cart.query.get(id)
 
-    issuance = Issued(user_id=issued.user_id, book_id=issued.book_id)
+    issuance = Issued(
+        user_id=issued.user_id,
+        book_id=issued.book_id,
+        username=issued.book.name,
+        author=issued.book.author,
+        date_issued=issued.book.date_issued,
+        return_date=issued.book.return_date,
+    )
     db.session.add(issuance)
     db.session.delete(issued)
     db.session.commit()
@@ -566,6 +573,30 @@ def issued_books():
 def issued_books_user():
     all_issued = Issued.query.filter_by(user_id=session["user_id"]).all()
     return render_template("library.html", all_issued=all_issued)
+
+
+@app.route("/return_book/<int:id>", methods=["POST"])
+@auth_required
+def return_book(id):
+    user_id = session.get("user_id")
+    return_book = Issued.query.filter_by(user_id=user_id, book_id=id).first()
+
+    db.session.delete(return_book)
+    db.session.commit()
+
+    return redirect(url_for("issued_books_user"))
+
+
+@app.route("/revoke_book/<int:book_id>/<int:user_id>", methods=["POST"])
+@admin_required
+def revoke_book(book_id, user_id):
+    # user_id = session.get("user_id")
+    return_book = Issued.query.filter_by(user_id=user_id, book_id=book_id).first()
+
+    db.session.delete(return_book)
+    db.session.commit()
+
+    return redirect(url_for("issued_books"))
 
 
 @app.route("/cart/<int:id>/delete", methods=["POST"])

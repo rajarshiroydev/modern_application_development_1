@@ -12,23 +12,28 @@ Library
 <table class="table">
     <thead>
         <tr>
-            <th>User ID</th>
-            <th>Userame</th>
             <th>Book Name</th>
             <th>Author</th>
             <th>Issue Date</th>
-            <th>Return</th>
+            <th>Return Date</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         {% for item in all_issued %}
         <tr>
-            <td>{{item.user_id}}</td>
-            <td>{{item.book_id}}</td>
-            {# <td>{{item.book.name}}</td>
-            <td>{{item.book.author}}</td>
-            <td>{{item.book.date_issued}}</td>
-            <td>{{item.book.return_date}}</td> #}
+            <td>{{item.username}}</td>
+            <td>{{item.author}}</td>
+            <td>{{item.date_issued}}</td>
+            <td>{{item.return_date}}</td>
+            <td>
+                <form action="{{url_for('return_book', id=item.book_id)}}" method="POST" style="display: inline;">
+                    <button class=" btn btn-danger">
+                        <i class="fas fa-ban"></i>
+                        Return
+                    </button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
