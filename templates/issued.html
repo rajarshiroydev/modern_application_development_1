@@ -20,17 +20,17 @@ Issued Books
             <th>Return Date</th>
         </tr>
     </thead>
-    {# <tbody>
+    <tbody>
         {% for item in all_issued %}
         <tr>
             <td>{{item.user_id}}</td>
             <td>{{item.book_id}}</td>
-            <td>{{item.book.name}}</td>
+            {# <td>{{item.book.name}}</td>
             <td>{{item.book.author}}</td>
             <td>{{item.book.date_issued}}</td>
-            <td>{{item.book.return_date}}</td>
+            <td>{{item.book.return_date}}</td> #}
         </tr>
         {% endfor %}
-    </tbody> #}
+    </tbody>
 </table>
 {% endblock content %}

@@ -550,9 +550,14 @@ def issued(id):
     db.session.commit()
 
     flash("Books issued successfully")
+    return redirect(url_for("cart"))
 
-    # all_issued = Issued.query.all()
-    return render_template("issued.html")
+
+@app.route("/issued_books")
+@admin_required
+def issued_books():
+    all_issued = Issued.query.all()
+    return render_template("issued.html", all_issued=all_issued)
 
 
 @app.route("/cart/<int:id>/delete", methods=["POST"])
