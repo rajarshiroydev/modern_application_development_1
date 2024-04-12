@@ -651,7 +651,7 @@ def give_feedbacks_post(id):
     db.session.add(book_feedback)
     db.session.commit()
     flash("Feedback given successfully")
-    return render_template("library.html")
+    return redirect(url_for("issued_books_user"))
 
 
 @app.route("/show_feedbacks")
@@ -666,3 +666,6 @@ def show_feedbacks():
 def show_feedbacks_user(book_id):
     feedbacks = Feedbacks.query.filter_by(book_id=book_id).all()
     return render_template("show_feedbacks.html", feedbacks=feedbacks)
+
+
+# ----------------------------------Set Date------------------------------------------- #
