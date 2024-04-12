@@ -623,4 +623,22 @@ def return_book(id):
     return redirect(url_for("issued_books_user"))
 
 
-# -----------------------------------------------------------------------------
+# ----------------------------------Feedbacks------------------------------------------- #
+
+
+@app.route("/give_feedbacks")
+@auth_required
+def give_feedbacks():
+    return render_template("give_feedbacks.html")
+
+
+# @app.route("/give_feedbacks")
+# @auth_required
+# def give_feedbacks_post():
+#     return render_template("give_feedbacks.html")
+
+
+@app.route("/show_feedbacks")
+@admin_required
+def show_feedbacks():
+    return "hello"

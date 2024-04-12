@@ -18,7 +18,7 @@ Library
             <th>Author</th>
             <th>Issue Date</th>
             <th>Return Date</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,6 +33,12 @@ Library
                     <button class=" btn btn-danger">
                         <i class="fas fa-ban"></i>
                         Return
+                    </button>
+                </form>
+                <form action="{{url_for('give_feedbacks')}}" style="display: inline;">
+                    <button class=" btn btn-warning">
+                        <i class="fas fa-star"></i>
+                        Give Feedback
                     </button>
                 </form>
             </td>
