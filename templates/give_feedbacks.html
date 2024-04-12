@@ -7,10 +7,10 @@ Give Feedbacks
 {% block content %}
 <h1 class="display-1">Give a Feedback</h1>
 
-<form action="" class="form">
+<form action="{{url_for('give_feedbacks_post', id=book_id)}}" method="POST" class="form">
     <div class="form-group">
-        <label for="name" class="form-label">Feedback</label>
-        <input type="text" name="name" id="name" class="form-control">
+        <label for="feedback" class="form-label">Feedback</label>
+        <input type="text" name="feedback" id="feedback" class="form-control">
     </div>
     <button type="submit" class="btn btn-success" style="margin-top: 10px">
         <i class="fas fa-check"></i>

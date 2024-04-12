@@ -35,7 +35,7 @@ Library
                         Return
                     </button>
                 </form>
-                <form action="{{url_for('give_feedbacks')}}" style="display: inline;">
+                <form action="{{url_for('give_feedbacks', id=item.book_id)}}" style="display: inline;">
                     <button class=" btn btn-warning">
                         <i class="fas fa-star"></i>
                         Give Feedback

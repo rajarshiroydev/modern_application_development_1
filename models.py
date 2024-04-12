@@ -32,6 +32,7 @@ class Books(db.Model):
     section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
 
     carts = db.relationship("Cart", backref="book", lazy=True)
+    # issued = db.relationship("Issued", backref="book", lazy=True)
 
 
 class Cart(db.Model):
@@ -50,6 +51,17 @@ class Issued(db.Model):
     author = db.Column(db.String(64), nullable=False)
     date_issued = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=False)
+
+
+class Feedbacks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
+    username = db.Column(db.String(32), nullable=False)
+    book_name = db.Column(db.String(32), nullable=False)
+    author = db.Column(db.String(64), nullable=False)
+    date_of_feedback = db.Column(db.Date, nullable=False)
+    feedback = db.Column(db.Text, nullable=False)
 
 
 with app.app_context():

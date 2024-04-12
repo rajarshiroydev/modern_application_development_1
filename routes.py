@@ -9,7 +9,7 @@ from flask import (
 
 
 from app import app
-from models import db, Section, User, Books, Cart, Issued
+from models import db, Section, User, Books, Cart, Issued, Feedbacks
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime, timedelta
@@ -626,19 +626,37 @@ def return_book(id):
 # ----------------------------------Feedbacks------------------------------------------- #
 
 
-@app.route("/give_feedbacks")
+@app.route("/give_feedbacks/<int:id>")
 @auth_required
-def give_feedbacks():
-    return render_template("give_feedbacks.html")
+def give_feedbacks(id):
+    return render_template("give_feedbacks.html", book_id=id)
 
 
-# @app.route("/give_feedbacks")
-# @auth_required
-# def give_feedbacks_post():
-#     return render_template("give_feedbacks.html")
+@app.route("/give_feedbacks_post/<int:id>", methods=["POST"])
+@auth_required
+def give_feedbacks_post(id):
+    feedback = request.form.get("feedback")
+
+    # finds the issued books of the user_id
+    info = Issued.query.get(id)
+
+    book_feedback = Feedbacks(
+        user_id=session["user_id"],
+        book_id=id,
+        username=session["username"],
+        book_name=info.book_name,
+        author=info.author,
+        feedback=feedback,
+        date_of_feedback=datetime.now(),
+    )
+    db.session.add(book_feedback)
+    db.session.commit()
+    flash("Feedback given successfully")
+    return render_template("library.html")
 
 
 @app.route("/show_feedbacks")
 @admin_required
 def show_feedbacks():
-    return "hello"
+    feedbacks = Feedbacks.query.all()
+    return render_template("show_feedbacks.html", feedbacks=feedbacks)
