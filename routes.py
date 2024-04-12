@@ -659,3 +659,10 @@ def give_feedbacks_post(id):
 def show_feedbacks():
     feedbacks = Feedbacks.query.all()
     return render_template("show_feedbacks.html", feedbacks=feedbacks)
+
+
+@app.route("/show_feedbacks/<int:book_id>")
+@auth_required
+def show_feedbacks_user(book_id):
+    feedbacks = Feedbacks.query.filter_by(book_id=book_id).all()
+    return render_template("show_feedbacks.html", feedbacks=feedbacks)

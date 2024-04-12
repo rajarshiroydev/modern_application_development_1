@@ -17,12 +17,12 @@ Library
             {# <img src="https://picsum.photos/200/200" class="card-img-top" alt="{{book.name}}"> #}
             <div class="card-body">
                 <h5 class="card-title">{{book.name}}</h5>
-                <br>
                 <div class="author">
-                    <strong>Author: </strong> {{book.author}}
+                    <strong><i>by</i> </strong> {{book.author}}
                 </div>
-                <div class="content">
-                    <strong>Content: </strong> {{book.content}}
+                <br>
+                <div><a href="{{url_for('show_feedbacks_user', book_id=book.id)}}" style="color: black;"><i><u>User
+                                feedbacks</u></i></a>
                 </div>
                 <br>
                 <strong>Choose Duration</strong>
@@ -64,7 +64,7 @@ Library
     }
 
     .days {
-        padding-top: 5px;
+        padding-top: 6px;
         padding-left: 20px;
         padding-right: 20px;
         border-style: solid;
