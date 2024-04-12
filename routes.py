@@ -109,7 +109,7 @@ def login_post():
 
     # if the user doesn't exist, then it shows error msg
     if not user:
-        flash("Username does not exist")
+        flash("You are not registered. Register first.")
         return redirect(url_for("login"))
 
     # if the user password do not match then it shows error msg
@@ -406,6 +406,12 @@ def edit_book_post(id):
     book.date_issued = date_issued
     book.return_date = return_date
     book.section = section
+    
+    # edit_issued_books = Issued(book_name=name, author=author).all()
+
+    # # since deleted_issued_books is a list so we need to loop it to delete every instance
+    # for issued_book in edit_issued_books:
+    #     db.session.delete(issued_book)
 
     db.session.commit()
 
@@ -435,6 +441,13 @@ def delete_book_post(id):
         return redirect(url_for("admin"))
 
     category_id = book.section_id
+
+    # deletes book from library, issued books and user requests when the source book is deleted
+    delete_issued_books = Issued.query.filter_by(book_id=book.id).all()
+
+    # since deleted_issued_books is a list so we need to loop it to delete every instance
+    for issued_book in delete_issued_books:
+        db.session.delete(issued_book)
 
     db.session.delete(book)
     db.session.commit()

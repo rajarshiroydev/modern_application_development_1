@@ -5,6 +5,7 @@ Issued Books
 {% endblock title %}
 
 {% block content %}
+{% if all_issued|length > 0 %}
 <h1 class="display-1">Issued Books</h1>
 
 <hr>
@@ -45,4 +46,8 @@ Issued Books
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<h1 class="display-1">No Issued Books CurrentlyE</h1>
+<hr>
+{% endif %}
 {% endblock content %}
