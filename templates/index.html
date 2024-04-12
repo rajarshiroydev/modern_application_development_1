@@ -28,10 +28,12 @@ Library
                 <strong>Choose Duration</strong>
                 <form action="{{url_for('add_to_cart', book_id=book.id, duration=duration)}}" class="form"
                     method="POST">
-                    <label for="duration" class="days">Days</label>
-                    <input type="number" name="duration" id="duration" class="form-control" value="1" min="1"
-                        style="border-radius: 0px 7px 7px 0px;">
-                    <input type="submit" value="Get Book" class="btn btn-success" style="margin-top: 20px">
+                    <div class="input-group">
+                        <label for="duration" class="days">Days</label>
+                        <input type="number" name="duration" id="duration" class="form-control" value="1" min="1"
+                            style="border-radius: 0px 7px 7px 0px;">
+                    </div>
+                    <input type="submit" value="Get Book" class="btn btn-success" style="margin-top: 10px;">
                 </form>
             </div>
         </div>

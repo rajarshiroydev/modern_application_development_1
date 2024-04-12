@@ -520,10 +520,17 @@ def add_to_cart(book_id):
 
     # checks if an item with the same user_if and book_id already exists
     cart = Cart.query.filter_by(user_id=session["user_id"], book_id=book_id).first()
+    issued_book = Issued.query.filter_by(
+        user_id=session["user_id"], book_id=book_id
+    ).first()
+
+    if issued_book:
+        flash("You already have this book in your library.")
+        return redirect(url_for("index"))
 
     # if it does, then
     if cart:  # If the book already exists in the cart
-        flash("You have already carted for this book.")
+        flash("You have already requested for this book.")
     else:  # If the book is new to the cart
         new_cart_item = Cart(
             user_id=session["user_id"],
@@ -589,11 +596,12 @@ def issued_books():
 @app.route("/revoke_book/<int:book_id>/<int:user_id>", methods=["POST"])
 @admin_required
 def revoke_book(book_id, user_id):
-    return_book = Issued.query.filter_by(user_id=user_id, book_id=book_id).first()
+    revoke_book = Issued.query.filter_by(user_id=user_id, book_id=book_id).first()
 
-    db.session.delete(return_book)
+    db.session.delete(revoke_book)
     db.session.commit()
 
+    flash("Book revoked successfully.")
     return redirect(url_for("issued_books"))
 
 
@@ -613,6 +621,8 @@ def return_book(id):
     db.session.delete(return_book)
     db.session.commit()
 
+    flash("Book returned successfully.")
     return redirect(url_for("issued_books_user"))
+
 
 # -----------------------------------------------------------------------------
