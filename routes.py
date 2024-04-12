@@ -637,14 +637,13 @@ def give_feedbacks(id):
 def give_feedbacks_post(id):
     feedback = request.form.get("feedback")
 
-    # finds the issued books of the user_id
-    info = Issued.query.get(id)
+    info = Books.query.get(id)
 
     book_feedback = Feedbacks(
         user_id=session["user_id"],
         book_id=id,
         username=session["username"],
-        book_name=info.book_name,
+        book_name=info.name,
         author=info.author,
         feedback=feedback,
         date_of_feedback=datetime.now(),
