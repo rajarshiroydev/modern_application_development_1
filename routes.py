@@ -22,7 +22,6 @@ def auth_required(func):
         if "user_id" in session:
             return func(*args, **kwargs)
         else:
-            flash("Please login to continue")
             return redirect(url_for("login"))
 
     return inner
@@ -33,7 +32,6 @@ def admin_required(func):
     @wraps(func)
     def inner(*args, **kwargs):
         if "user_id" not in session:
-            flash("Please login to continue")
             return redirect(url_for("login"))
 
         user = User.query.get(session["user_id"])
