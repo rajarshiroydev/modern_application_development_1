@@ -330,8 +330,6 @@ def add_book_post():
     date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
     return_date = datetime.strptime(return_date, "%Y-%m-%d")
 
-    # formatted_date_issued = date_issued.strftime("%d-%m-%Y")
-
     if date_issued > datetime.now():
         flash("Issue date is ahead of current date")
         return redirect(url_for("add_book", section_id=section_id))
@@ -394,8 +392,6 @@ def edit_book_post(id):
     date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
     return_date = datetime.strptime(return_date, "%Y-%m-%d")
 
-    # formatted_date_issued = date_issued.strftime("%d-%m-%Y")
-
     if date_issued > datetime.now():
         flash("Issue date is ahead of current date")
         return redirect(url_for("add_book", section_id=section_id))
@@ -423,9 +419,11 @@ def edit_book_post(id):
 @admin_required
 def delete_book(id):
     book = Books.query.get(id)
+
     if not book:
         flash("Book does not exist")
         return redirect(url_for("admin"))
+
     return render_template("/book/delete.html", book=book)
 
 
@@ -491,7 +489,7 @@ def index():
     return render_template("index.html", sections=sections, parameters=parameters)
 
 
-# ------------------------------Cart------------------------------------#
+# ------------------------------User Requests------------------------------------#
 
 
 @app.route("/cart")
@@ -505,6 +503,7 @@ def cart():
 @auth_required
 def add_to_cart(book_id):
     book = Books.query.get(book_id)
+
     if not book:
         flash("Book does not exist")
         return redirect(url_for("index"))
@@ -540,6 +539,24 @@ def add_to_cart(book_id):
     return redirect(url_for("index"))
 
 
+@app.route("/cart/<int:id>/delete", methods=["POST"])
+@admin_required
+def delete_cart(id):
+    cart = Cart.query.get(id)
+
+    if not cart:
+        flash("Cart does not exist")
+        return redirect(url_for("cart"))
+
+    db.session.delete(cart)
+    db.session.commit()
+    flash("Item deleted successfully")
+    return redirect(url_for("cart"))
+
+
+# ------------------------------Issued Books------------------------------------#
+
+
 @app.route("/issued/<int:id>", methods=["POST"])
 @admin_required
 def issued(id):
@@ -553,6 +570,7 @@ def issued(id):
         date_issued=issued.book.date_issued,
         return_date=issued.book.return_date,
     )
+
     db.session.add(issuance)
     db.session.delete(issued)
     db.session.commit()
@@ -566,6 +584,17 @@ def issued(id):
 def issued_books():
     all_issued = Issued.query.all()
     return render_template("issued.html", all_issued=all_issued)
+
+
+@app.route("/revoke_book/<int:book_id>/<int:user_id>", methods=["POST"])
+@admin_required
+def revoke_book(book_id, user_id):
+    return_book = Issued.query.filter_by(user_id=user_id, book_id=book_id).first()
+
+    db.session.delete(return_book)
+    db.session.commit()
+
+    return redirect(url_for("issued_books"))
 
 
 @app.route("/issued_books_user")
@@ -586,32 +615,4 @@ def return_book(id):
 
     return redirect(url_for("issued_books_user"))
 
-
-@app.route("/revoke_book/<int:book_id>/<int:user_id>", methods=["POST"])
-@admin_required
-def revoke_book(book_id, user_id):
-    # user_id = session.get("user_id")
-    return_book = Issued.query.filter_by(user_id=user_id, book_id=book_id).first()
-
-    db.session.delete(return_book)
-    db.session.commit()
-
-    return redirect(url_for("issued_books"))
-
-
-@app.route("/cart/<int:id>/delete", methods=["POST"])
-@admin_required
-def delete_cart(id):
-    cart = Cart.query.get(id)
-
-    if not cart:
-        flash("Cart does not exist")
-        return redirect(url_for("cart"))
-
-    db.session.delete(cart)
-    db.session.commit()
-    flash("Item deleted successfully")
-    return redirect(url_for("cart"))
-
-
-# ------------------------------Issued Books------------------------------------#
+# -----------------------------------------------------------------------------
