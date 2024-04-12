@@ -8,6 +8,7 @@ User Feedbacks
 
 <h1 class="display-1">User Feedbacks</h1>
 <hr>
+{% if session['is_admin'] %}
 <table class="table">
     <thead>
         <tr>
@@ -34,4 +35,32 @@ User Feedbacks
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<table class="table">
+    <thead>
+        <tr>
+            {# <th>Book ID</th> #}
+            {# <th>User ID</th> #}
+            <th>Username</th>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Date of Feedback</th>
+            <th>Feedback</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feedback in feedbacks %}
+        <tr>
+            {# <td>{{feedback.user_id}}</td> #}
+            {# <td>{{feedback.book_id}}</td> #}
+            <td>{{feedback.username}}</td>
+            <td>{{feedback.book_name}}</td>
+            <td>{{feedback.author}}</td>
+            <td>{{feedback.date_of_feedback}}</td>
+            <td>{{feedback.feedback}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock %}

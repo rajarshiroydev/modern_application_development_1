@@ -29,10 +29,10 @@ Library
             <td>{{item.date_issued}}</td>
             <td>{{item.return_date}}</td>
             <td>
-                <form action="{{url_for('return_book', id=item.book_id)}}" method="POST" style="display: inline;">
-                    <button class=" btn btn-danger">
-                        <i class="fas fa-ban"></i>
-                        Return
+                <form action="" style="display: inline;">
+                    <button class=" btn btn-success">
+                        <i class="fas fa-book-reader"></i>
+                        Read
                     </button>
                 </form>
                 <form action="{{url_for('give_feedbacks', id=item.book_id)}}" style="display: inline;">
@@ -41,6 +41,13 @@ Library
                         Give Feedback
                     </button>
                 </form>
+                <form action="{{url_for('return_book', id=item.book_id)}}" method="POST" style="display: inline;">
+                    <button class=" btn btn-danger">
+                        <i class="fas fa-ban"></i>
+                        Return
+                    </button>
+                </form>
+
             </td>
         </tr>
         {% endfor %}
