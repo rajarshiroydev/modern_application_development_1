@@ -570,7 +570,8 @@ def issued(id):
     issuance = Issued(
         user_id=issued.user_id,
         book_id=issued.book_id,
-        username=issued.book.name,
+        username=issued.username,
+        book_name=issued.book.name,
         author=issued.book.author,
         date_issued=issued.book.date_issued,
         return_date=issued.book.return_date,

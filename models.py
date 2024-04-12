@@ -46,6 +46,7 @@ class Issued(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
     username = db.Column(db.String(32))
+    book_name = db.Column(db.String(32))
     author = db.Column(db.String(64))
     date_issued = db.Column(db.Date)
     return_date = db.Column(db.Date)
