@@ -24,32 +24,32 @@ class Section(db.Model):
 
 class Books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    content = db.Column(db.Text)
-    author = db.Column(db.String(64))
-    date_issued = db.Column(db.Date)
-    return_date = db.Column(db.Date)
-    section_id = db.Column(db.Integer, db.ForeignKey("section.id"))
+    name = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    author = db.Column(db.String(64), nullable=False)
+    date_issued = db.Column(db.Date)  # null as it'll be filled during issuance
+    return_date = db.Column(db.Date)  # null as it'll be filled during issuance
+    section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
 
     carts = db.relationship("Cart", backref="book", lazy=True)
 
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    username = db.Column(db.Integer, db.ForeignKey("user.username"))
-    book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    username = db.Column(db.Integer, db.ForeignKey("user.username"), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
 
 
 class Issued(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
-    username = db.Column(db.String(32))
-    book_name = db.Column(db.String(32))
-    author = db.Column(db.String(64))
-    date_issued = db.Column(db.Date)
-    return_date = db.Column(db.Date)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
+    username = db.Column(db.String(32), nullable=False)
+    book_name = db.Column(db.String(32), nullable=False)
+    author = db.Column(db.String(64), nullable=False)
+    date_issued = db.Column(db.Date, nullable=False)
+    return_date = db.Column(db.Date, nullable=False)
 
 
 with app.app_context():

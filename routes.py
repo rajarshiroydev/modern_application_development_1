@@ -554,7 +554,7 @@ def delete_cart(id):
 
     db.session.delete(cart)
     db.session.commit()
-    flash("Item deleted successfully")
+    flash("Request rejected successfully")
     return redirect(url_for("cart"))
 
 
