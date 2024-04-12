@@ -311,8 +311,6 @@ def add_book_post():
     name = request.form.get("name")
     content = request.form.get("content")
     author = request.form.get("author")
-    date_issued = request.form.get("date_issued")
-    return_date = request.form.get("return_date")
     section_id = request.form.get("section_id")
 
     section = Section.query.get(section_id)
@@ -321,27 +319,14 @@ def add_book_post():
         flash("Cateogory does not exist")
         return redirect(url_for("admin"))
 
-    if not name or not content or not author or not date_issued or not return_date:
+    if not name or not content or not author:
         flash("All fields are mandatory")
-        return redirect(url_for("add_book", section_id=section_id))
-
-    date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
-    return_date = datetime.strptime(return_date, "%Y-%m-%d")
-
-    if date_issued > datetime.now():
-        flash("Issue date is ahead of current date")
-        return redirect(url_for("add_book", section_id=section_id))
-
-    if return_date < date_issued:
-        flash("Return date cannot be behind issue date")
         return redirect(url_for("add_book", section_id=section_id))
 
     book = Books(
         name=name,
         content=content,
         author=author,
-        date_issued=date_issued,
-        return_date=return_date,
         section=section,
     )
 
@@ -406,7 +391,7 @@ def edit_book_post(id):
     book.date_issued = date_issued
     book.return_date = return_date
     book.section = section
-    
+
     # edit_issued_books = Issued(book_name=name, author=author).all()
 
     # # since deleted_issued_books is a list so we need to loop it to delete every instance
@@ -519,6 +504,8 @@ def add_to_cart(book_id):
         flash("Book does not exist")
         return redirect(url_for("index"))
 
+    book.date_issued = datetime.now()
+
     duration = request.form.get("duration")
     duration = int(duration)
     book.return_date = datetime.now() + timedelta(days=duration)
@@ -529,8 +516,6 @@ def add_to_cart(book_id):
         flash("You cannot cart for more than 5 books.")
         return redirect(url_for("index"))
 
-    # checks if an item with the same user_if and book_id already exists
-    cart = Cart.query.filter_by(user_id=session["user_id"], book_id=book_id).first()
     issued_book = Issued.query.filter_by(
         user_id=session["user_id"], book_id=book_id
     ).first()
@@ -538,6 +523,9 @@ def add_to_cart(book_id):
     if issued_book:
         flash("You already have this book in your library.")
         return redirect(url_for("index"))
+
+    # checks if an item with the same user_id and book_id already exists
+    cart = Cart.query.filter_by(user_id=session["user_id"], book_id=book_id).first()
 
     # if it does, then
     if cart:  # If the book already exists in the cart
@@ -548,8 +536,6 @@ def add_to_cart(book_id):
             book_id=book_id,
             username=session["username"],
         )
-        new_return_date = Books(return_date=book.return_date)
-        db.session.add(new_return_date)
         db.session.add(new_cart_item)
         db.session.commit()
         flash("Requested book successfully!")

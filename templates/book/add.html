@@ -22,14 +22,6 @@ Add Books
         <input type="text" name="author" id="author" class="form-control">
     </div>
     <div class="form-group">
-        <label for="date_issued" class="form-label">Date Issued</label>
-        <input type="date" name="date_issued" id="date_issued" value="{{now}}" class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="return_date" class="form-label">Return Date</label>
-        <input type="date" name="return_date" id="return_date" value="{{now}}" class="form-control">
-    </div>
-    <div class="form-group">
         <label for="section_id" class="form-label">Section</label>
         <select name="section_id" id="section_id" class="form-control">
             {% for cat in sections %}
