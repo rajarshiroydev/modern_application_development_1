@@ -9,8 +9,6 @@ Give Feedbacks
 
 <form action="{{url_for('give_feedbacks_post', id=book_id)}}" method="POST" class="form">
     <div class="form-group">
-        {# <label for="feedback" class="form-label">Feedback</label> #}
-        {# <input type="text" name="feedback" id="feedback" class="form-control"> #}
         <textarea name="feedback" rows="15" cols="50"></textarea>
     </div>
     <button type="submit" class="btn btn-success" style="margin-top: 10px">

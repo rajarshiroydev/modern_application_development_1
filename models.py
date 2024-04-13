@@ -53,6 +53,8 @@ class Issued(db.Model):
     return_date = db.Column(db.Date, nullable=False)
 
 
+# keeping the data of feedbacks separately because the
+# feedbacks would remain even if the books are deleted
 class Feedbacks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

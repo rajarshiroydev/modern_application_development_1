@@ -687,5 +687,5 @@ def set_date():
             db.session.delete(issued)
 
     db.session.commit()
-    flash("Successfully removed books that are passed the deadline.")
+    flash("Successfully revoked books passed the return date.")
     return redirect(url_for("issued_books"))

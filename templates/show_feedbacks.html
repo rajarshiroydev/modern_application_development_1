@@ -8,59 +8,43 @@ User Feedbacks
 
 <h1 class="display-1">User Feedbacks</h1>
 <hr>
-{% if session['is_admin'] %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Book ID</th>
-            <th>User ID</th>
-            <th>Username</th>
-            <th>Book Name</th>
-            <th>Author</th>
-            <th>Date of Feedback</th>
-            <th>Feedback</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for feedback in feedbacks %}
-        <tr>
-            <td>{{feedback.user_id}}</td>
-            <td>{{feedback.book_id}}</td>
-            <td>{{feedback.username}}</td>
-            <td>{{feedback.book_name}}</td>
-            <td>{{feedback.author}}</td>
-            <td>{{feedback.date_of_feedback}}</td>
-            <td>{{feedback.feedback}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<table class="table">
-    <thead>
-        <tr>
-            {# <th>Book ID</th> #}
-            {# <th>User ID</th> #}
-            <th>Username</th>
-            <th>Book Name</th>
-            <th>Author</th>
-            <th>Date of Feedback</th>
-            <th>Feedback</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for feedback in feedbacks %}
-        <tr>
-            {# <td>{{feedback.user_id}}</td> #}
-            {# <td>{{feedback.book_id}}</td> #}
-            <td>{{feedback.username}}</td>
-            <td>{{feedback.book_name}}</td>
-            <td>{{feedback.author}}</td>
-            <td>{{feedback.date_of_feedback}}</td>
-            <td>{{feedback.feedback}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
+
+<div class="feedbacks-list">
+    {% for feedback in feedbacks %}
+    <div class="feedbacks" style="width: 18rem; margin-right: 20px">
+        <div class="feedback-body">
+            <h5 class="card-title">{{feedback.book_name}}</h5>
+            <div class="author"><strong>Author:</strong> {{feedback.author}}</div>
+            <div><strong>User ID:</strong> {{feedback.user_id}}</div>
+            <div><strong>Book ID:</strong> {{feedback.book_id}}</div>
+            <div><strong>Username:</strong> {{feedback.username}}</div>
+            <div><strong>Date:</strong> {{feedback.date_of_feedback}}</div>
+            <div><strong>Feedback:</strong> {{feedback.feedback}}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
+
+{% block style %}
+<style>
+    .feedbacks-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .feedbacks {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+
+    .feedback-body {
+        margin: 10px;
+    }
+</style>
+{% endblock style %}
