@@ -10,7 +10,7 @@
                 {% if 'user_id' in session %}
                 {% if session['is_admin'] %}
                 <!-- This block will only be shown if the user is an admin -->
-                <a class="nav-link" href="{{ url_for('admin') }}">Sections</a>
+                <a class="nav-link" href="{{ url_for('admin') }}">Dashboard</a>
                 <a class="nav-link" href="{{ url_for('show_feedbacks') }}">Feedbacks</a>
                 <a class="nav-link" href="{{ url_for('issued_books') }}">Issued Books</a>
                 <a class="nav-link" href="{{ url_for('cart') }}">User Requests</a>

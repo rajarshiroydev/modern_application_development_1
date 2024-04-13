@@ -32,7 +32,9 @@ class Books(db.Model):
     section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
 
     carts = db.relationship("Cart", backref="book", lazy=True)
-    # issued = db.relationship("Issued", backref="book", lazy=True)
+    issued = db.relationship(
+        "Issued", backref="books", lazy=True, cascade="all, delete-orphan"
+    )
 
 
 class Cart(db.Model):

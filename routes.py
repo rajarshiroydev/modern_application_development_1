@@ -358,8 +358,6 @@ def edit_book_post(id):
     name = request.form.get("name")
     content = request.form.get("content")
     author = request.form.get("author")
-    date_issued = request.form.get("date_issued")
-    return_date = request.form.get("return_date")
     section_id = request.form.get("section_id")
 
     section = Section.query.get(section_id)
@@ -372,31 +370,12 @@ def edit_book_post(id):
         flash("All fields are mandatory")
         return redirect(url_for("add_book", section_id=section_id))
 
-    # date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
-    # return_date = datetime.strptime(return_date, "%Y-%m-%d")
-
-    # if date_issued > datetime.now():
-    #     flash("Issue date is ahead of current date")
-    #     return redirect(url_for("add_book", section_id=section_id))
-
-    # if return_date < date_issued:
-    #     flash("Return date cannot be behind issue date")
-    #     return redirect(url_for("add_book", section_id=section_id))
-
     book = Books.query.get(id)
 
     book.name = name
     book.content = content
     book.author = author
-    # book.date_issued = date_issued
-    # book.return_date = return_date
     book.section = section
-
-    # edit_issued_books = Issued(book_name=name, author=author).all()
-
-    # # since deleted_issued_books is a list so we need to loop it to delete every instance
-    # for issued_book in edit_issued_books:
-    #     db.session.delete(issued_book)
 
     db.session.commit()
 
@@ -702,3 +681,6 @@ def read_book(id):
         flash("No such book exists")
         return redirect(url_for("issued_books_user"))
     return render_template("read_book.html", book=book)
+
+
+# -------------------------------------------------------------------------------------- #

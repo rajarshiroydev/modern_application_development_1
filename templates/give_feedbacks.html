@@ -9,11 +9,11 @@ Give Feedbacks
 
 <form action="{{url_for('give_feedbacks_post', id=book_id)}}" method="POST" class="form">
     <div class="form-group">
-        <textarea name="feedback" rows="15" cols="50"></textarea>
+        <textarea name="feedback" rows="5" cols="63" maxlength="100"></textarea>
     </div>
     <button type="submit" class="btn btn-success" style="margin-top: 10px">
         <i class="fas fa-check"></i>
         Submit
     </button>
 </form>
-{% endblock %}x
+{% endblock %}

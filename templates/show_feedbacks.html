@@ -5,16 +5,19 @@ User Feedbacks
 {% endblock %}
 
 {% block content %}
-
+{% if session['is_admin'] and feedbacks|length == 0 %}
+<h1 class="display-1">No User Feedbacks Currently</h1>
+<hr>
+{% elif session['is_admin'] and feedbacks|length > 0%}
 <h1 class="display-1">User Feedbacks</h1>
 <hr>
-
 <div class="feedbacks-list">
     {% for feedback in feedbacks %}
     <div class="feedbacks" style="width: 18rem; margin-right: 20px">
         <div class="feedback-body">
-            <h5 class="card-title">{{feedback.book_name}}</h5>
+            <h5 class="card-title">Title: {{feedback.book_name}}</h5>
             <div class="author"><strong>Author:</strong> {{feedback.author}}</div>
+            <br>
             {% if session['is_admin'] %}
             <div><strong>User ID:</strong> {{feedback.user_id}}</div>
             <div><strong>Book ID:</strong> {{feedback.book_id}}</div>
@@ -26,7 +29,24 @@ User Feedbacks
     </div>
     {% endfor %}
 </div>
-
+{% elif not session['is_admin'] and feedbacks|length == 0 %}
+<h1 class="display-1">Be the first to give a feedback</h1>
+<hr>
+{% else %}
+<h1 class="display-1">User Feedbacks</h1>
+<hr>
+<div class="feedbacks-list">
+    {% for feedback in feedbacks %}
+    <div class="feedbacks" style="width: 18rem; margin-right: 20px">
+        <div class="feedback-body">
+            <div><strong>Username:</strong> {{feedback.username}}</div>
+            <div><strong>Date:</strong> {{feedback.date_of_feedback}}</div>
+            <div><strong>Feedback:</strong> {{feedback.feedback}}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}
 
 {% block style %}
