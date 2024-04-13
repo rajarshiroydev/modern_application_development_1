@@ -15,8 +15,10 @@ User Feedbacks
         <div class="feedback-body">
             <h5 class="card-title">{{feedback.book_name}}</h5>
             <div class="author"><strong>Author:</strong> {{feedback.author}}</div>
+            {% if session['is_admin'] %}
             <div><strong>User ID:</strong> {{feedback.user_id}}</div>
             <div><strong>Book ID:</strong> {{feedback.book_id}}</div>
+            {% endif %}
             <div><strong>Username:</strong> {{feedback.username}}</div>
             <div><strong>Date:</strong> {{feedback.date_of_feedback}}</div>
             <div><strong>Feedback:</strong> {{feedback.feedback}}</div>
