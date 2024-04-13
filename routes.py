@@ -588,7 +588,8 @@ def issued(id):
 @admin_required
 def issued_books():
     all_issued = Issued.query.all()
-    return render_template("issued.html", all_issued=all_issued)
+    now = datetime.now().strftime("%Y-%m-%d")
+    return render_template("issued.html", all_issued=all_issued, now=now)
 
 
 @app.route("/revoke_book/<int:book_id>/<int:user_id>", methods=["POST"])
@@ -670,8 +671,21 @@ def show_feedbacks_user(book_id):
 
 # ----------------------------------Set Date------------------------------------------- #
 
-# revoke access is book not returned within return date
-# @app.route('setdate')
-# @admin_required
-# @def setdate():
-    
+
+# revoke access if book not returned within the return date
+@app.route("/set_date", methods=["POST"])
+@admin_required
+def set_date():
+    new_date = request.form.get("new_date")
+    new_date = datetime.strptime(new_date, "%Y-%m-%d").date()
+
+    issued_books = Issued.query.all()
+
+    # if set_date > request date then revoke access
+    for issued in issued_books:
+        if new_date > issued.return_date:
+            db.session.delete(issued)
+
+    db.session.commit()
+    flash("Successfully removed books that are passed the deadline.")
+    return redirect(url_for("issued_books"))

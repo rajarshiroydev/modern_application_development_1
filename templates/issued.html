@@ -46,13 +46,11 @@ Issued Books
         {% endfor %}
     </tbody>
 </table>
-<form action="" style="display: inline;">
-    <button class=" btn btn-primary">
-        <i class="fas fa-calendar"></i>
-        Set Date
-    </button>
-    <input type="date" name="setdate" id="setdate" name="birthday">
+<form action="{{url_for('set_date')}}" method="POST">
+    <input type="date" name="new_date" id="new_date" class="form-control" value="{{now}}" style="width: 15%;">
+    <input type="submit" class="btn btn-primary" value="Set Date" style="margin-top: 5px;">
 </form>
+
 {% else %}
 <h1 class="display-1">No Issued Books Currently</h1>
 <hr>
