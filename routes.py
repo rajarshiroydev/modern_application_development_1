@@ -368,28 +368,28 @@ def edit_book_post(id):
         flash("Cateogory does not exist")
         return redirect(url_for("admin"))
 
-    if not name or not content or not author or not date_issued or not return_date:
+    if not name or not content or not author:
         flash("All fields are mandatory")
         return redirect(url_for("add_book", section_id=section_id))
 
-    date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
-    return_date = datetime.strptime(return_date, "%Y-%m-%d")
+    # date_issued = datetime.strptime(date_issued, "%Y-%m-%d")
+    # return_date = datetime.strptime(return_date, "%Y-%m-%d")
 
-    if date_issued > datetime.now():
-        flash("Issue date is ahead of current date")
-        return redirect(url_for("add_book", section_id=section_id))
+    # if date_issued > datetime.now():
+    #     flash("Issue date is ahead of current date")
+    #     return redirect(url_for("add_book", section_id=section_id))
 
-    if return_date < date_issued:
-        flash("Return date cannot be behind issue date")
-        return redirect(url_for("add_book", section_id=section_id))
+    # if return_date < date_issued:
+    #     flash("Return date cannot be behind issue date")
+    #     return redirect(url_for("add_book", section_id=section_id))
 
     book = Books.query.get(id)
 
     book.name = name
     book.content = content
     book.author = author
-    book.date_issued = date_issued
-    book.return_date = return_date
+    # book.date_issued = date_issued
+    # book.return_date = return_date
     book.section = section
 
     # edit_issued_books = Issued(book_name=name, author=author).all()
@@ -689,3 +689,16 @@ def set_date():
     db.session.commit()
     flash("Successfully revoked books passed the return date.")
     return redirect(url_for("issued_books"))
+
+
+# ----------------------------------Read Book------------------------------------------- #
+
+
+@app.route("/readbook/<int:id>", methods=["POST"])
+@auth_required
+def read_book(id):
+    book = Books.query.get(id)
+    if not book:
+        flash("No such book exists")
+        return redirect(url_for("issued_books_user"))
+    return render_template("read_book.html", book=book)

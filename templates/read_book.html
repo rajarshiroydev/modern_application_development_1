@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Read Book
+{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="book-info">
+        <h2>{{ book.name }}</h2>
+        <h5><i>by {{ book.author }}</i></h5>
+    </div>
+    <div class="book-content">
+        {{ book.content }}
+    </div>
+</body>
+{% endblock %}
+
+{% block style %}
+<style>
+    .book-info {
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+
+    .book-content {
+        text-align: justify;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}

@@ -29,7 +29,7 @@ Library
             <td>{{item.date_issued}}</td>
             <td>{{item.return_date}}</td>
             <td>
-                <form action="" style="display: inline;">
+                <form action="{{url_for('read_book', id=item.book_id)}}" method="POST" style="display: inline;">
                     <button class=" btn btn-success">
                         <i class="fas fa-book-reader"></i>
                         Read
