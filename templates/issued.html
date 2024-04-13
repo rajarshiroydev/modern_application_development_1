@@ -46,13 +46,13 @@ Issued Books
         {% endfor %}
     </tbody>
 </table>
-<button class=" btn btn-primary">
-    <i class="fas fa-calendar"></i>
-    Set Date
-</button>
-<label for="birthday"></label>
-<input type="date" id="birthday" name="birthday">
-{# <div class="date"></div> #}
+<form action="" style="display: inline;">
+    <button class=" btn btn-primary">
+        <i class="fas fa-calendar"></i>
+        Set Date
+    </button>
+    <input type="date" name="setdate" id="setdate" name="birthday">
+</form>
 {% else %}
 <h1 class="display-1">No Issued Books Currently</h1>
 <hr>

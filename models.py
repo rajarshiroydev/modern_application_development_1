@@ -38,7 +38,7 @@ class Books(db.Model):
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    username = db.Column(db.Integer, db.ForeignKey("user.username"), nullable=False)
+    username = db.Column(db.String(32), db.ForeignKey("user.username"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
 
 

@@ -669,3 +669,9 @@ def show_feedbacks_user(book_id):
 
 
 # ----------------------------------Set Date------------------------------------------- #
+
+# revoke access is book not returned within return date
+# @app.route('setdate')
+# @admin_required
+# @def setdate():
+    
