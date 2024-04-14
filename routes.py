@@ -1,18 +1,10 @@
-from flask import (
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-    session,
-)
-
-
+from flask import flash, redirect, render_template, request, url_for, session, send_file
 from app import app
 from models import db, Section, User, Books, Cart, Issued, Feedbacks
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime, timedelta
+from weasyprint import HTML
 
 
 # Decorator for authentication of users
@@ -688,4 +680,34 @@ def read_book(id):
     return render_template("read_book.html", book=book)
 
 
-# -------------------------------------------------------------------------------------- #
+# -------------------------------------Download Book------------------------------------------------- #
+
+
+@app.route("/download_pdf/<int:id>", methods=["POST"])
+@auth_required
+def download_book(id):
+    book = Books.query.get(id)
+
+    name = book.name
+    author = book.author
+    content = book.content
+
+    # Generate HTML content with book details and content
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{name} by {author}</title>
+    </head>
+    <body>
+        <h1>{name}</h1>
+        <h2>by {author}</h2>
+        <br> 
+        <div>{content}</div>
+    </body>
+    </html>
+    """
+
+    filename = "book.pdf"
+    HTML(string=html_content).write_pdf(filename)
+    return send_file(filename, as_attachment=True)

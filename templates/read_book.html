@@ -7,10 +7,21 @@ Read Book
 {% block content %}
 
 <body>
-    <div class="book-info">
-        <h2>{{ book.name }}</h2>
-        <h5><i>by {{ book.author }}</i></h5>
+    <div class="flex">
+        <div class="book-info">
+            <h2>{{ book.name }}</h2>
+            <h5><i>by {{ book.author }}</i></h5>
+        </div>
+        <div>
+            <form action="{{url_for('download_book', id=book.id)}}" method="POST">
+                <button class=" btn btn-success">
+                    <i class="fas fa-download"></i>
+                    Download
+                </button>
+            </form>
+        </div>
     </div>
+
     <div class="book-content">
         {{ book.content }}
     </div>
@@ -19,6 +30,17 @@ Read Book
 
 {% block style %}
 <style>
+    form {
+        margin-top: 20px;
+
+    }
+
+    .flex {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     .book-info {
         margin-top: 20px;
         margin-bottom: 40px;
