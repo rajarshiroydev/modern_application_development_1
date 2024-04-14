@@ -377,6 +377,11 @@ def edit_book_post(id):
     book.author = author
     book.section = section
 
+    issued_books = Issued.query.get(id)
+
+    issued_books.book_name = name
+    issued_books.author = author
+
     db.session.commit()
 
     flash("Book edited successfully")
