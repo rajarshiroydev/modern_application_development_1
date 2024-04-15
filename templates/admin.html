@@ -5,7 +5,6 @@ Admin Dashboard
 {% endblock %}
 
 {% block content %}
-{# <h1 class="display-1">Admin Dashboard</h1> #}
 
 <h2 class="display-5">Dashboard</h2>
 
@@ -21,10 +20,9 @@ Admin Dashboard
     <tbody>
         {% for section in sections %}
         <tr>
-            <td style="font-size: 25px">{{section.id}}</td>
-            <td style="font-size: 25px">{{section.name}}</td>
-            <td style="font-size: 25px">{{section.books|length}}</td>
-            {# <td style="font-size: 25px">{{section.date_created}}</td> #}
+            <td class="font">{{section.id}}</td>
+            <td class="font">{{section.name}}</td>
+            <td class="font">{{section.books|length}}</td>
 
             <td>
                 <a href="{{url_for('show_section', id=section.id)}}" class="btn btn-primary">
@@ -50,4 +48,12 @@ Admin Dashboard
     Add Section
 </a>
 
+{% endblock %}
+
+{% block style %}
+<style>
+    .font {
+        font-size: 20px;
+    }
+</style>
 {% endblock %}

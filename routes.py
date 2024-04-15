@@ -460,7 +460,10 @@ def index():
         ]
 
     return render_template(
-        "index.html", sections=sections, parameters=parameters, query=query
+        "index.html",
+        sections=sections,
+        parameters=parameters,
+        query=query,
     )
 
 
