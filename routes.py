@@ -15,7 +15,7 @@ def auth_required(func):
             return func(*args, **kwargs)
         else:
             return redirect(url_for("login"))
-        
+
     return inner
 
 
@@ -407,12 +407,17 @@ def delete_book_post(id):
         flash("Book does not exist")
         return redirect(url_for("admin"))
 
-    category_id = book.section_id
+    section_id = book.section_id
 
-    # deletes book from library, issued books and user requests when the source book is deleted
+    # Before deleting the book, we find all Cart items referencing
+    # the book and delete them. This resolves the foreign key constraint violation.
+    cart_items = Cart.query.filter_by(book_id=book.id).all()
+    for item in cart_items:
+        db.session.delete(item)
+
+    # deletes book from library, issued books and user requests
+    # when the source book is deleted
     delete_issued_books = Issued.query.filter_by(book_id=book.id).all()
-
-    # since deleted_issued_books is a list so we need to loop it to delete every instance
     for issued_book in delete_issued_books:
         db.session.delete(issued_book)
 
@@ -420,7 +425,7 @@ def delete_book_post(id):
     db.session.commit()
 
     flash("Book deleted successfully")
-    return redirect(url_for("show_section", id=category_id))
+    return redirect(url_for("show_section", id=section_id))
 
 
 # ------------------------------User------------------------------------#
