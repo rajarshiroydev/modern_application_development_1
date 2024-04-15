@@ -434,8 +434,7 @@ def delete_book_post(id):
 @app.route("/")
 @auth_required
 def index():
-    sections = Section.query.all()
-
+    sections = Section.query.filter(Section.books.any()).all()
     parameter = request.args.get("parameter")
     query = request.args.get("query")
 
@@ -447,29 +446,22 @@ def index():
 
     if parameter == "section_name":
         sections = Section.query.filter(Section.name.ilike(f"%{query}%")).all()
-        return render_template(
-            "index.html", sections=sections, parameters=parameters, query=query
-        )
     elif parameter == "book_name":
-        return render_template(
-            "index.html",
-            sections=sections,
-            param=parameter,
-            book_name=query,
-            parameters=parameters,
-            query=query,
-        )
+        sections = [
+            section
+            for section in sections
+            if any(query.lower() in book.name.lower() for book in section.books)
+        ]
     elif parameter == "author_name":
-        return render_template(
-            "index.html",
-            sections=sections,
-            param=parameter,
-            author_name=query,
-            parameters=parameters,
-            query=query,
-        )
+        sections = [
+            section
+            for section in sections
+            if any(query.lower() in book.author.lower() for book in section.books)
+        ]
 
-    return render_template("index.html", sections=sections, parameters=parameters)
+    return render_template(
+        "index.html", sections=sections, parameters=parameters, query=query
+    )
 
 
 # ------------------------------User Requests------------------------------------#
