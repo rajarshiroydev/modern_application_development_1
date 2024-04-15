@@ -378,14 +378,16 @@ def edit_book_post(id):
     # edits the book and author name in issued books
     # when the source book is edited
     issued_books = Issued.query.get(id)
-    issued_books.book_name = name
-    issued_books.author = author
+    if issued_books:
+        issued_books.book_name = name
+        issued_books.author = author
 
     # edits the book and author name in feedbacks
     # when the source book is edited
     feedback = Feedbacks.query.get(id)
-    feedback.book_name = name
-    feedback.author = author
+    if feedback:
+        feedback.book_name = name
+        feedback.author = author
 
     db.session.commit()
 

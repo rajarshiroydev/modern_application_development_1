@@ -15,7 +15,7 @@ User Feedbacks
     {% for feedback in feedbacks %}
     <div class="feedbacks" style="width: 18rem; margin-right: 20px">
         <div class="feedback-body">
-            <h5 class="card-title">Title: {{feedback.book_name}}</h5>
+            <h5 class="card-title">Book Title: {{feedback.book_name}}</h5>
             <div class="author"><strong>Author:</strong> {{feedback.author}}</div>
             <br>
             {% if session['is_admin'] %}

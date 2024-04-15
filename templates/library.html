@@ -1,57 +1,42 @@
 {% extends "layout.html" %}
-
-{% block title %}
-Library
-{% endblock title %}
-
+{% block title %}Library{% endblock title %}
 {% block content %}
 {% if all_issued|length > 0 %}
-
 <h1 class="display-1">Library</h1>
-
 <hr>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Book Name</th>
-            <th>Author</th>
-            <th>Issue Date</th>
-            <th>Return Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in all_issued %}
-        <tr>
-            <td>{{item.book_name}}</td>
-            <td>{{item.author}}</td>
-            <td>{{item.date_issued}}</td>
-            <td>{{item.return_date}}</td>
-            <td>
-                <form action="{{url_for('read_book', id=item.book_id)}}" method="POST" style="display: inline;">
-                    <button class=" btn btn-success">
-                        <i class="fas fa-book-reader"></i>
-                        Read
-                    </button>
-                </form>
-                <form action="{{url_for('give_feedbacks', id=item.book_id)}}" style="display: inline;">
-                    <button class=" btn btn-warning">
-                        <i class="fas fa-star"></i>
-                        Give Feedback
-                    </button>
-                </form>
-                <form action="{{url_for('return_book', id=item.book_id)}}" method="POST" style="display: inline;">
-                    <button class=" btn btn-danger">
-                        <i class="fas fa-ban"></i>
-                        Return
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    {% for item in all_issued %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.book_name }}</h5>
+                <p class="card-text">
+                    <strong>Author:</strong> {{ item.author }}<br>
+                    <strong>Issue Date:</strong> {{ item.date_issued }}<br>
+                    <strong>Return Date:</strong> {{ item.return_date }}
+                </p>
+                <div class="d-flex justify-content-between">
+                    <form action="{{url_for('read_book', id=item.book_id)}}" method="POST">
+                        <button class="btn btn-success">
+                            <i class="fas fa-book-reader"></i> Read
+                        </button>
+                    </form>
+                    <form action="{{url_for('give_feedbacks', id=item.book_id)}}">
+                        <button class="btn btn-warning">
+                            <i class="fas fa-star"></i> Feedback
+                        </button>
+                    </form>
+                    <form action="{{url_for('return_book', id=item.book_id)}}" method="POST">
+                        <button class="btn btn-danger">
+                            <i class="fas fa-ban"></i> Return
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% else %}
 <h1 class="display-1">No Books in Library Currently</h1>
 <hr>
