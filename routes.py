@@ -185,7 +185,14 @@ def profile_post():
 @admin_required
 def admin():
     sections = Section.query.all()
-    return render_template("admin.html", sections=sections)
+    section_names = [section.name for section in sections]
+    section_sizes = [len(section.books) for section in sections]
+    return render_template(
+        "admin.html",
+        sections=sections,
+        section_names=section_names,
+        section_sizes=section_sizes,
+    )
 
 
 @app.route("/section/add")

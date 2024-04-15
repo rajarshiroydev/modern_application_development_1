@@ -29,7 +29,7 @@ Admin Dashboard
                     <i class="fas fa-search"></i>
                     Show
                 </a>
-                <a href="{{url_for('edit_section', id=section.id)}}" class="btn btn-primary">
+                <a href="{{url_for('edit_section', id=section.id)}}" class="btn btn-success">
                     <i class="fas fa-edit"></i>
                     Edit
                 </a>
@@ -48,12 +48,52 @@ Admin Dashboard
     Add Section
 </a>
 
+<h2 class="display-5 margin">Statistics</h2>
+<hr>
 {% endblock %}
 
 {% block style %}
+
 <style>
     .font {
         font-size: 20px;
     }
+
+    .margin {
+        margin-top: 30px;
+    }
+
+    #myChart {
+        width: 700px;
+        height: 700px;
+    }
 </style>
+{% endblock %}
+
+{% block script %}
+<div>
+    <canvas class="container" id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'pie', // Change the type to 'pie'
+        data: {
+            labels: {{ section_names | safe }},
+        datasets: [{
+            label: '# of Products',
+            data: {{ section_sizes }},
+        backgroundColor: [ // Add backgroundColor for each slice
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+            // Add more colors as needed
+        ],
+        hoverOffset: 4
+        }]
+    },
+});
+</script>
 {% endblock %}
