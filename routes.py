@@ -15,7 +15,7 @@ def auth_required(func):
             return func(*args, **kwargs)
         else:
             return redirect(url_for("login"))
-
+        
     return inner
 
 
@@ -48,7 +48,6 @@ def register():
 # register page post
 @app.route("/register", methods=["POST"])
 def register_post():
-    # name of the input in the form should match the name inside get
     name = request.form.get("name")
     username = request.form.get("username")
     password = request.form.get("password")
@@ -73,6 +72,7 @@ def register_post():
     new_user = User(username=username, passhash=password_hash, name=name)
     db.session.add(new_user)
     db.session.commit()
+    flash("Registered successfully.")
     return redirect(url_for("login"))
 
 
@@ -363,16 +363,22 @@ def edit_book_post(id):
         return redirect(url_for("add_book", section_id=section_id))
 
     book = Books.query.get(id)
-
     book.name = name
     book.content = content
     book.author = author
     book.section = section
 
+    # edits the book and author name in issued books
+    # when the source book is edited
     issued_books = Issued.query.get(id)
-
     issued_books.book_name = name
     issued_books.author = author
+
+    # edits the book and author name in feedbacks
+    # when the source book is edited
+    feedback = Feedbacks.query.get(id)
+    feedback.book_name = name
+    feedback.author = author
 
     db.session.commit()
 
