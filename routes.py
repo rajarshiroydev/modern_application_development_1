@@ -517,7 +517,7 @@ def add_to_cart(book_id):
     # check cart size
     cart_size = Cart.query.filter_by(user_id=session["user_id"]).count()
     if cart_size >= 5:
-        flash("You cannot cart for more than 5 books.")
+        flash("You cannot request for more than 5 books.")
         return redirect(url_for("index"))
 
     issued_book = Issued.query.filter_by(
