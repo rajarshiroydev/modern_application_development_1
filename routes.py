@@ -708,6 +708,6 @@ def download_book(id):
     </html>
     """
 
-    filename = "book.pdf"
+    filename = f"{name}.pdf"
     HTML(string=html_content).write_pdf(filename)
     return send_file(filename, as_attachment=True)

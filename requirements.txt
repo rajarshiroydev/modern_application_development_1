@@ -11,4 +11,4 @@ SQLAlchemy==2.0.28
 typing_extensions==4.10.0
 Werkzeug==3.0.1
 
-pip3 install reportlab
+pip3 install WeasyPrint
