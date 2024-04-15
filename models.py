@@ -62,8 +62,8 @@ class Feedbacks(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
     username = db.Column(db.String(32), nullable=False)
-    book_name = db.Column(db.String(32))
-    author = db.Column(db.String(64))
+    book_name = db.Column(db.String(32), nullable=False)
+    author = db.Column(db.String(64), nullable=False)
     date_of_feedback = db.Column(db.Date, nullable=False)
     feedback = db.Column(db.Text, nullable=False)
 
