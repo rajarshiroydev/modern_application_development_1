@@ -458,15 +458,28 @@ def index():
     elif parameter == "book_name":
         sections = [
             section
-            for section in sections
-            if any(query.lower() in book.name.lower() for book in section.books)
+            for section in Section.query.all()
+            if any(book for book in section.books if query.lower() in book.name.lower())
         ]
     elif parameter == "author_name":
         sections = [
             section
-            for section in sections
-            if any(query.lower() in book.author.lower() for book in section.books)
+            for section in Section.query.all()
+            if any(
+                book for book in section.books if query.lower() in book.author.lower()
+            )
         ]
+
+    # Filter books within each section
+    for section in sections:
+        if parameter == "book_name":
+            section.books = [
+                book for book in section.books if query.lower() in book.name.lower()
+            ]
+        elif parameter == "author_name":
+            section.books = [
+                book for book in section.books if query.lower() in book.author.lower()
+            ]
 
     return render_template(
         "index.html",
