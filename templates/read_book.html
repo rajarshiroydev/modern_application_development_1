@@ -12,6 +12,7 @@ Read Book
             <h2>{{ book.name }}</h2>
             <h5><i>by {{ book.author }}</i></h5>
         </div>
+        {% if not session['is_admin'] %}
         <div>
             <form action="{{url_for('download_book', id=book.id)}}" method="POST">
                 <button class=" btn btn-success">
@@ -20,6 +21,7 @@ Read Book
                 </button>
             </form>
         </div>
+        {% endif %}
     </div>
 
     <div class="book-content">
