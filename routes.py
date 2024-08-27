@@ -4,7 +4,7 @@ from models import db, Section, User, Books, Cart, Issued, Feedbacks
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime, timedelta
-from weasyprint import HTML
+# from weasyprint import HTML
 
 
 # Decorator for authentication of users
